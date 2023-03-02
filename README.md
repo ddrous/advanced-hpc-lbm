@@ -136,3 +136,11 @@ Elapsed system CPU time:	0.029001 (s)
 You can view the final state of the simulation by creating a .png image file using a provided Gnuplot script:
 
     $ gnuplot final_state.plt
+
+
+# Profiling
+    make clean
+    make -CFLAGS "-pg"       ## Among other flags
+    ./d2q9-bgk input_128x128.params obstacles_128x128.dat
+    gprof ./d2q9-bgk gmon.out > profile.txt
+    less profile.txt
