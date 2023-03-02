@@ -55,6 +55,10 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include </opt/homebrew/opt/libomp/include/omp.h>
+
+// omp_set_num_threads(16);
+
 
 #define NSPEEDS         9
 #define FINALSTATEFILE  "final_state.dat"
@@ -225,6 +229,7 @@ int single_lbm_loop(const t_param params, t_speed* cells, t_speed* tmp_cells, in
   /* modify the 2nd row of the grid */
   int jj = params.ny - 2;
 
+  #pragma omp parallel for
   for (int ii = 0; ii < params.nx; ii++)
   {
     /* if the cell is not occupied and
@@ -249,6 +254,7 @@ int single_lbm_loop(const t_param params, t_speed* cells, t_speed* tmp_cells, in
 
 
   /* Fused Loop */
+  #pragma omp parallel for
   for (int jj = 0; jj < params.ny; jj++)
   {
     for (int ii = 0; ii < params.nx; ii++)     
@@ -306,7 +312,8 @@ int single_lbm_loop(const t_param params, t_speed* cells, t_speed* tmp_cells, in
       {
         /* compute local density total */
         decimal local_density = 0.f;
-
+        
+        // #pragma omp parallel for reduction (+:local_density) TODO
         for (int kk = 0; kk < NSPEEDS; kk++)
         {
           local_density += tmp_speeds[kk];
@@ -391,6 +398,7 @@ int single_lbm_loop(const t_param params, t_speed* cells, t_speed* tmp_cells, in
 
 
   /* Copy tmp cells to cells */
+  #pragma omp parallel for
   for (int i = 0; i < params.nx*params.ny; i++)
   {
     // *cells[i].speeds = *tmp_cells[i].speeds;
