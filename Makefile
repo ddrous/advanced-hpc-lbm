@@ -3,7 +3,8 @@
 EXE=d2q9-bgk
 
 CC=gcc
-CFLAGS= -std=c99 -Wall -Ofast -mtune=native
+# CFLAGS= -std=c99 -Wall -O2 -mtune=native -ftree-vectorize -fopt-info-vec-missed
+CFLAGS= -std=c99 -Wall -Ofast -mtune=native -ftree-vectorize
 LIBS = -lm
 
 FINAL_STATE_FILE=./final_state.dat
@@ -17,7 +18,7 @@ $(EXE): $(EXE).c
 	$(CC) $(CFLAGS) $^ $(LIBS) -o $@
 
 check:
-	python check/check.py --ref-av-vels-file=$(REF_AV_VELS_FILE) --ref-final-state-file=$(REF_FINAL_STATE_FILE) --av-vels-file=$(AV_VELS_FILE) --final-state-file=$(FINAL_STATE_FILE)
+	python3 check/check.py --ref-av-vels-file=$(REF_AV_VELS_FILE) --ref-final-state-file=$(REF_FINAL_STATE_FILE) --av-vels-file=$(AV_VELS_FILE) --final-state-file=$(FINAL_STATE_FILE)
 
 .PHONY: all check clean
 
