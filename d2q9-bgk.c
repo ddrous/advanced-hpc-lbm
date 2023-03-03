@@ -422,57 +422,57 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
 
 
 
-// // TODO optimise this second
-// decimal av_velocity(const t_param params, t_speed* cells, int* obstacles)
-// {
-//   int    tot_cells = 0;  /* no. of cells used in calculation */
-//   decimal tot_u;          /* accumulated magnitudes of velocity for each cell */
+// TODO optimise this second
+decimal av_velocity(const t_param params, t_speed* cells, int* obstacles)
+{
+  int    tot_cells = 0;  /* no. of cells used in calculation */
+  decimal tot_u;          /* accumulated magnitudes of velocity for each cell */
 
-//   /* initialise */
-//   tot_u = 0.f;
+  /* initialise */
+  tot_u = 0.f;
 
-//   /* loop over all non-blocked cells */
-//   for (int jj = 0; jj < params.ny; jj++)
-//   {
-//     for (int ii = 0; ii < params.nx; ii++)
-//     {
-//       /* ignore occupied cells */
-//       if (!obstacles[ii + jj*params.nx])
-//       {
-//         /* local density total */
-//         decimal local_density = 0.f;
+  /* loop over all non-blocked cells */
+  for (int jj = 0; jj < params.ny; jj++)
+  {
+    for (int ii = 0; ii < params.nx; ii++)
+    {
+      /* ignore occupied cells */
+      if (!obstacles[ii + jj*params.nx])
+      {
+        /* local density total */
+        decimal local_density = 0.f;
 
-//         for (int kk = 0; kk < NSPEEDS; kk++)
-//         {
-//           local_density += cells[ii + jj*params.nx].speeds[kk];
-//         }
+        for (int kk = 0; kk < NSPEEDS; kk++)
+        {
+          local_density += cells[ii + jj*params.nx].speeds[kk];
+        }
 
-//         /* x-component of velocity */
-//         decimal u_x = (cells[ii + jj*params.nx].speeds[1]
-//                       + cells[ii + jj*params.nx].speeds[5]
-//                       + cells[ii + jj*params.nx].speeds[8]
-//                       - (cells[ii + jj*params.nx].speeds[3]
-//                          + cells[ii + jj*params.nx].speeds[6]
-//                          + cells[ii + jj*params.nx].speeds[7]))
-//                      / local_density;
-//         /* compute y velocity component */
-//         decimal u_y = (cells[ii + jj*params.nx].speeds[2]
-//                       + cells[ii + jj*params.nx].speeds[5]
-//                       + cells[ii + jj*params.nx].speeds[6]
-//                       - (cells[ii + jj*params.nx].speeds[4]
-//                          + cells[ii + jj*params.nx].speeds[7]
-//                          + cells[ii + jj*params.nx].speeds[8]))
-//                      / local_density;
-//         /* accumulate the norm of x- and y- velocity components */
-//         tot_u += sqrtf((u_x * u_x) + (u_y * u_y));
-//         /* increase counter of inspected cells */
-//         ++tot_cells;
-//       }
-//     }
-//   }
+        /* x-component of velocity */
+        decimal u_x = (cells[ii + jj*params.nx].speeds[1]
+                      + cells[ii + jj*params.nx].speeds[5]
+                      + cells[ii + jj*params.nx].speeds[8]
+                      - (cells[ii + jj*params.nx].speeds[3]
+                         + cells[ii + jj*params.nx].speeds[6]
+                         + cells[ii + jj*params.nx].speeds[7]))
+                     / local_density;
+        /* compute y velocity component */
+        decimal u_y = (cells[ii + jj*params.nx].speeds[2]
+                      + cells[ii + jj*params.nx].speeds[5]
+                      + cells[ii + jj*params.nx].speeds[6]
+                      - (cells[ii + jj*params.nx].speeds[4]
+                         + cells[ii + jj*params.nx].speeds[7]
+                         + cells[ii + jj*params.nx].speeds[8]))
+                     / local_density;
+        /* accumulate the norm of x- and y- velocity components */
+        tot_u += sqrtf((u_x * u_x) + (u_y * u_y));
+        /* increase counter of inspected cells */
+        ++tot_cells;
+      }
+    }
+  }
 
-//   return tot_u / (decimal)tot_cells;
-// }
+  return tot_u / (decimal)tot_cells;
+}
 
 
 int initialise(const char* paramfile, const char* obstaclefile,
@@ -652,12 +652,12 @@ int finalise(const t_param* params, t_speed** cells_ptr, t_speed** tmp_cells_ptr
 }
 
 
-// decimal calc_reynolds(const t_param params, t_speed* cells, int* obstacles)
-// {
-//   const decimal viscosity = 1.f / 6.f * (2.f / params.omega - 1.f);
+decimal calc_reynolds(const t_param params, t_speed* cells, int* obstacles)
+{
+  const decimal viscosity = 1.f / 6.f * (2.f / params.omega - 1.f);
 
-//   return av_velocity(params, cells, obstacles) * params.reynolds_dim / viscosity;
-// }
+  return av_velocity(params, cells, obstacles) * params.reynolds_dim / viscosity;
+}
 
 decimal total_density(const t_param params, t_speed* cells)
 {
