@@ -271,6 +271,7 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
       ** appropriate directions of travel and writing into
       ** scratch space grid */
 
+
       tmp_speeds[0] = cells[ii + jj*params.nx].speeds[0]; /* central cell, no movement */
       tmp_speeds[1] = cells[x_w + jj*params.nx].speeds[1]; /* east */
       tmp_speeds[2] = cells[ii + y_s*params.nx].speeds[2]; /* north */
@@ -283,32 +284,34 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
 
 
 
+      int id = ii + jj*params.nx;
+
       // REBOUND
       /* if the cell contains an obstacle */
-      if (obstacles[jj*params.nx + ii])
+      if (obstacles[id])
       {
+
         /* called after propagate, so taking values from scratch space
         ** mirroring, and writing into main grid */
-        tmp_cells[ii + jj*params.nx].speeds[1] = tmp_speeds[3];
-        tmp_cells[ii + jj*params.nx].speeds[2] = tmp_speeds[4];
-        tmp_cells[ii + jj*params.nx].speeds[3] = tmp_speeds[1];
-        tmp_cells[ii + jj*params.nx].speeds[4] = tmp_speeds[2];
-        tmp_cells[ii + jj*params.nx].speeds[5] = tmp_speeds[7];
-        tmp_cells[ii + jj*params.nx].speeds[6] = tmp_speeds[8];
-        tmp_cells[ii + jj*params.nx].speeds[7] = tmp_speeds[5];
-        tmp_cells[ii + jj*params.nx].speeds[8] = tmp_speeds[6];
+        tmp_cells[id].speeds[1] = tmp_speeds[3];
+        tmp_cells[id].speeds[2] = tmp_speeds[4];
+        tmp_cells[id].speeds[3] = tmp_speeds[1];
+        tmp_cells[id].speeds[4] = tmp_speeds[2];
+        tmp_cells[id].speeds[5] = tmp_speeds[7];
+        tmp_cells[id].speeds[6] = tmp_speeds[8];
+        tmp_cells[id].speeds[7] = tmp_speeds[5];
+        tmp_cells[id].speeds[8] = tmp_speeds[6];
       }
 
 
 
       // COLLISION
       /* don't consider occupied cells */
-      // if (!obstacles[ii + jj*params.nx])
+      // if (!obstacles[id])
       else
       {
         /* compute local density total */
         decimal local_density = 0.f;
-
         for (int kk = 0; kk < NSPEEDS; kk++)
         {
           local_density += tmp_speeds[kk];
@@ -380,39 +383,14 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
         /* relaxation step */
         for (int kk = 0; kk < NSPEEDS; kk++)
         {
-          tmp_cells[ii + jj*params.nx].speeds[kk] = tmp_speeds[kk]
+          tmp_cells[id].speeds[kk] = tmp_speeds[kk]
                                                   + params.omega
                                                   * (d_equ[kk] - tmp_speeds[kk]);
         }
 
 
         // // AVERAGE VELOCITY
-        // /* local density total */
-        // decimal local_density = 0.f;
-
-        // for (int kk = 0; kk < NSPEEDS; kk++)
-        // {
-        //   local_density += cells[ii + jj*params.nx].speeds[kk];
-        // }
-
-        // /* x-component of velocity */
-        // decimal u_x = (tmp_cells[ii + jj*params.nx].speeds[1]
-        //               + tmp_cells[ii + jj*params.nx].speeds[5]
-        //               + tmp_cells[ii + jj*params.nx].speeds[8]
-        //               - (tmp_cells[ii + jj*params.nx].speeds[3]
-        //                  + tmp_cells[ii + jj*params.nx].speeds[6]
-        //                  + tmp_cells[ii + jj*params.nx].speeds[7]))
-        //              / local_density;
-        // /* compute y velocity component */
-        // decimal u_y = (tmp_cells[ii + jj*params.nx].speeds[2]
-        //               + tmp_cells[ii + jj*params.nx].speeds[5]
-        //               + tmp_cells[ii + jj*params.nx].speeds[6]
-        //               - (tmp_cells[ii + jj*params.nx].speeds[4]
-        //                  + tmp_cells[ii + jj*params.nx].speeds[7]
-        //                  + tmp_cells[ii + jj*params.nx].speeds[8]))
-        //              / local_density;
-        /* accumulate the norm of x- and y- velocity components */
-        tot_u += sqrtf((u_x * u_x) + (u_y * u_y));
+        tot_u += sqrtf(u_sq);
         /* increase counter of inspected cells */
         ++tot_cells;
 
@@ -425,11 +403,11 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
 
 
   /* Copy tmp cells to cells */
-  for (int i = 0; i < params.nx*params.ny; i++)
+  for (int id = 0; id < params.nx*params.ny; id++)
   {
     // *cells[i].speeds = *tmp_cells[i].speeds;
       for (int kk = 0; kk < NSPEEDS; kk++)
-        cells[i].speeds[kk] = tmp_cells[i].speeds[kk];
+        cells[id].speeds[kk] = tmp_cells[id].speeds[kk];
   }
 
 
