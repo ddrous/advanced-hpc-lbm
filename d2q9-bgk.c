@@ -97,11 +97,11 @@ int initialise(const char* paramfile, const char* obstaclefile,
 ** accelerate_flow(), propagate(), rebound() & collision()
 */
 decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-// int accelerate_flow(const t_param params, t_speed* cells, int* obstacles);
+int accelerate_flow(const t_param params, t_speed* cells, const int* obstacles);
 // int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
 // int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
 // int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-decimal single_lbm_loop(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);      // Fusion step !!
+decimal pro_re_col_av(const t_param params, const t_speed* cells, t_speed* tmp_cells, const int* obstacles);      // Fusion step !!
 
 int write_values(const t_param params, t_speed* cells, int* obstacles, decimal* av_vels);
 
@@ -207,29 +207,22 @@ int main(int argc, char* argv[])
 
 decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles)
 {
-  // single_lbm_loop(params, cells, tmp_cells, obstacles);
+  decimal av_vel;
 
-  // return EXIT_SUCCESS;
+  accelerate_flow(params, cells, obstacles);
+  av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles);
+
+  return av_vel;
+
+}
 
 
+
+int accelerate_flow(const t_param params, t_speed* cells, const int* obstacles){
 
   /* compute weighting factors */
   decimal w1 = params.density * params.accel / 9.f;
   decimal w2 = params.density * params.accel / 36.f;
-
-  const decimal c_sq = 1.f / 3.f; /* square of speed of sound */
-  const decimal w0_ = 4.f / 9.f;  /* weighting factor */
-  const decimal w1_ = 1.f / 9.f;  /* weighting factor */
-  const decimal w2_ = 1.f / 36.f; /* weighting factor */
-
-
-  int    tot_cells = 0;  /* no. of cells used in calculation */
-  decimal tot_u;          /* accumulated magnitudes of velocity for each cell */
-
-  /* initialise */
-  tot_u = 0.f;
-
-
 
   // ACCELERATE FLOW
   /* modify the 2nd row of the grid */
@@ -254,6 +247,58 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
       cells[ii + jj*params.nx].speeds[7] -= w2;
     }
   }
+
+  return EXIT_SUCCESS;
+
+}
+
+
+
+decimal pro_re_col_av(const t_param params, const t_speed* cells, t_speed* tmp_cells, const int* obstacles)
+{
+
+
+  // /* compute weighting factors */
+  // decimal w1 = params.density * params.accel / 9.f;
+  // decimal w2 = params.density * params.accel / 36.f;
+
+  const decimal c_sq = 1.f / 3.f; /* square of speed of sound */
+  const decimal w0_ = 4.f / 9.f;  /* weighting factor */
+  const decimal w1_ = 1.f / 9.f;  /* weighting factor */
+  const decimal w2_ = 1.f / 36.f; /* weighting factor */
+
+
+  int    tot_cells = 0;  /* no. of cells used in calculation */
+  decimal tot_u;          /* accumulated magnitudes of velocity for each cell */
+
+  /* initialise */
+  tot_u = 0.f;
+
+
+
+  // // ACCELERATE FLOW
+  // /* modify the 2nd row of the grid */
+  // int jj = params.ny - 2;
+
+  // for (int ii = 0; ii < params.nx; ii++)
+  // {
+  //   /* if the cell is not occupied and
+  //   ** we don't send a negative density */
+  //   if ((!obstacles[ii + jj*params.nx])
+  //       && ((cells[ii + jj*params.nx].speeds[3] - w1) > 0.f)
+  //       && ((cells[ii + jj*params.nx].speeds[6] - w2) > 0.f)
+  //       && ((cells[ii + jj*params.nx].speeds[7] - w2) > 0.f))
+  //   {
+  //     /* increase 'east-side' densities */
+  //     cells[ii + jj*params.nx].speeds[1] += w1;
+  //     cells[ii + jj*params.nx].speeds[5] += w2;
+  //     cells[ii + jj*params.nx].speeds[8] += w2;
+  //     /* decrease 'west-side' densities */
+  //     cells[ii + jj*params.nx].speeds[3] -= w1;
+  //     cells[ii + jj*params.nx].speeds[6] -= w2;
+  //     cells[ii + jj*params.nx].speeds[7] -= w2;
+  //   }
+  // }
 
 
 
@@ -407,13 +452,12 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
     }
   }
 
-
-
   return tot_u / (decimal)tot_cells;
 
 
-
 }
+
+
 
 
 
@@ -471,6 +515,9 @@ decimal av_velocity(const t_param params, t_speed* cells, int* obstacles)
 
   return tot_u / (decimal)tot_cells;
 }
+
+
+
 
 
 int initialise(const char* paramfile, const char* obstaclefile,
