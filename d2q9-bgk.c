@@ -165,6 +165,13 @@ int main(int argc, char* argv[])
   {
         av_vels[tt] = timestep(params, cells, tmp_cells, obstacles);
 
+
+        //  SWAP pointers
+        t_speed* tmp = cells;
+        cells = tmp_cells;
+        tmp_cells = tmp;
+
+
     #ifdef DEBUG
         printf("==timestep: %d==\n", tt);
         printf("av velocity: %.12E\n", av_vels[tt]);
@@ -400,15 +407,6 @@ decimal timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* 
     }
   }
 
-
-
-  /* Copy tmp cells to cells */
-  for (int id = 0; id < params.nx*params.ny; id++)
-  {
-    // *cells[i].speeds = *tmp_cells[i].speeds;
-      for (int kk = 0; kk < NSPEEDS; kk++)
-        cells[id].speeds[kk] = tmp_cells[id].speeds[kk];
-  }
 
 
   return tot_u / (decimal)tot_cells;
