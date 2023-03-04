@@ -8,7 +8,7 @@ void vectorized () {
 
 void not_vectorized () {
   for (int i=0; i<256; i++){
-    a[i] = i%2==1 ? b[i] + c[i] : 0;
+    a[i] = i%2==10 ? b[i] + c[i] : 0;
   }
 }
 
