@@ -3,9 +3,10 @@
 EXE=d2q9-bgk
 
 CC=gcc
-CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fno-tree-vectorize
-# CFLAGS= -std=c99 -Wall -O2 -mtune=native -ftree-vectorize -fopt-info-vec-missed
+# CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fno-tree-vectorize
 # CFLAGS= -std=c99 -Wall -Ofast -mtune=native -ftree-vectorize -fopt-info-vec-missed
+CFLAGS= -std=c99 -Wall -Ofast -ftree-vectorize -fopt-info-vec-optimized -fopt-info-vec-missed
+# CFLAGS= -std=c99 -Wall -Ofast -march=haswell -fopt-info-vec-missed -funsafe-math-optimizations
 LIBS = -lm
 
 FINAL_STATE_FILE=./final_state.dat
