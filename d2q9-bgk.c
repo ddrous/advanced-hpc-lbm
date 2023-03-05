@@ -364,22 +364,7 @@ __assume((params.nx)%2==0);
 
 
 
-      int id = ii + jj*params.nx;
-
-      // REBOUND
-      /* if the cell contains an obstacle */
-      // const int cond1 = obstacles[id];
-
-      //   /* called after propagate, so taking values from scratch space
-      //   ** mirroring, and writing into main grid */
-      //   tmp_cells->speeds[1][id] = cond1? tmp_speeds[3]: tmp_cells->speeds[1][id];
-      //   tmp_cells->speeds[2][id] = cond1? tmp_speeds[4]: tmp_cells->speeds[2][id];
-      //   tmp_cells->speeds[3][id] = cond1? tmp_speeds[1]: tmp_cells->speeds[3][id];
-      //   tmp_cells->speeds[4][id] = cond1? tmp_speeds[2]: tmp_cells->speeds[4][id];
-      //   tmp_cells->speeds[5][id] = cond1? tmp_speeds[7]: tmp_cells->speeds[5][id];
-      //   tmp_cells->speeds[6][id] = cond1? tmp_speeds[8]: tmp_cells->speeds[6][id];
-      //   tmp_cells->speeds[7][id] = cond1? tmp_speeds[5]: tmp_cells->speeds[7][id];
-      //   tmp_cells->speeds[8][id] = cond1? tmp_speeds[6]: tmp_cells->speeds[8][id];
+      const int id = ii + jj*params.nx;
 
       if (obstacles[id])
       {
@@ -405,11 +390,13 @@ __assume((params.nx)%2==0);
         /* compute local density total */
         // const int cond2 = !obstacles[id];
 
-        decimal local_density = 0.f;
-        for (int kk = 0; kk < NSPEEDS; kk++)
-        {
-          local_density += tmp_speeds[kk];
-        }
+        // decimal local_density = 0.f;
+        // for (int kk = 0; kk < NSPEEDS; kk++)
+        // {
+        //   local_density += tmp_speeds[kk];
+        // }
+        decimal local_density = tmp_speeds[0] + tmp_speeds[1] + tmp_speeds[2] + tmp_speeds[3]
+                          + tmp_speeds[4] + tmp_speeds[5] + tmp_speeds[6] + tmp_speeds[7] + tmp_speeds[8];
 
         /* compute x velocity component */
         decimal u_x = (tmp_speeds[1]
@@ -449,68 +436,68 @@ __assume((params.nx)%2==0);
         d_equ[0] = w0_ * local_density
                    * (1.f - u_sq / (2.f * c_sq));
         /* axis speeds: weight w1_ */
-        #pragma simd
-        for (int kk = 1; kk < 5; kk++)
-        {
-          d_equ[kk] = w1_ * local_density * (1.f + u[kk] / c_sq
-                                          + (u[kk] * u[kk]) / val1
-                                          - u_sq / val2);
-          d_equ[kk+4] = w2_ * local_density * (1.f + u[kk+4] / c_sq
-                                          + (u[kk+4] * u[kk+4]) / val1
-                                          - u_sq / val2);
-        }
+        // #pragma simd
+        // for (int kk = 1; kk < 5; kk++)
+        // {
+        //   d_equ[kk] = w1_ * local_density * (1.f + u[kk] / c_sq
+        //                                   + (u[kk] * u[kk]) / val1
+        //                                   - u_sq / val2);
+        //   d_equ[kk+4] = w2_ * local_density * (1.f + u[kk+4] / c_sq
+        //                                   + (u[kk+4] * u[kk+4]) / val1
+        //                                   - u_sq / val2);
+        // }
 
 
-        // d_equ[1] = w1_ * local_density * (1.f + u[1] / c_sq
-        //                                  + (u[1] * u[1]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
-        // d_equ[2] = w1_ * local_density * (1.f + u[2] / c_sq
-        //                                  + (u[2] * u[2]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
-        // d_equ[3] = w1_ * local_density * (1.f + u[3] / c_sq
-        //                                  + (u[3] * u[3]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
-        // d_equ[4] = w1_ * local_density * (1.f + u[4] / c_sq
-        //                                  + (u[4] * u[4]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
-        // /* diagonal speeds: weight w2_ */
-        // d_equ[5] = w2_ * local_density * (1.f + u[5] / c_sq
-        //                                  + (u[5] * u[5]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
-        // d_equ[6] = w2_ * local_density * (1.f + u[6] / c_sq
-        //                                  + (u[6] * u[6]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
-        // d_equ[7] = w2_ * local_density * (1.f + u[7] / c_sq
-        //                                  + (u[7] * u[7]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
-        // d_equ[8] = w2_ * local_density * (1.f + u[8] / c_sq
-        //                                  + (u[8] * u[8]) / (2.f * c_sq * c_sq)
-        //                                  - u_sq / (2.f * c_sq));
+        d_equ[1] = w1_ * local_density * (1.f + u[1] / c_sq
+                                         + (u[1] * u[1]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
+        d_equ[2] = w1_ * local_density * (1.f + u[2] / c_sq
+                                         + (u[2] * u[2]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
+        d_equ[3] = w1_ * local_density * (1.f + u[3] / c_sq
+                                         + (u[3] * u[3]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
+        d_equ[4] = w1_ * local_density * (1.f + u[4] / c_sq
+                                         + (u[4] * u[4]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
+        /* diagonal speeds: weight w2_ */
+        d_equ[5] = w2_ * local_density * (1.f + u[5] / c_sq
+                                         + (u[5] * u[5]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
+        d_equ[6] = w2_ * local_density * (1.f + u[6] / c_sq
+                                         + (u[6] * u[6]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
+        d_equ[7] = w2_ * local_density * (1.f + u[7] / c_sq
+                                         + (u[7] * u[7]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
+        d_equ[8] = w2_ * local_density * (1.f + u[8] / c_sq
+                                         + (u[8] * u[8]) / (2.f * c_sq * c_sq)
+                                         - u_sq / (2.f * c_sq));
 
-        /* relaxation step */
+        // #pragma simd
         // for (int kk = 0; kk < NSPEEDS; kk++)
         // {
-        //   tmp_cells->speeds[kk][id] = cond2? tmp_speeds[kk] + params.omega * (d_equ[kk] - tmp_speeds[kk]): tmp_cells->speeds[kk][id];
+        //   tmp_cells->speeds[kk][id] = tmp_speeds[kk]
+        //                                           + params.omega
+        //                                           * (d_equ[kk] - tmp_speeds[kk]);
         // }
-        #pragma simd
-        for (int kk = 0; kk < NSPEEDS; kk++)
-        {
-          tmp_cells->speeds[kk][id] = tmp_speeds[kk]
-                                                  + params.omega
-                                                  * (d_equ[kk] - tmp_speeds[kk]);
-        }
+
+        tmp_cells->speeds[0][id] = tmp_speeds[0] + params.omega * (d_equ[0] - tmp_speeds[0]);
+        tmp_cells->speeds[1][id] = tmp_speeds[1] + params.omega * (d_equ[1] - tmp_speeds[1]);
+        tmp_cells->speeds[2][id] = tmp_speeds[2] + params.omega * (d_equ[2] - tmp_speeds[2]);
+        tmp_cells->speeds[3][id] = tmp_speeds[3] + params.omega * (d_equ[3] - tmp_speeds[3]);
+        tmp_cells->speeds[4][id] = tmp_speeds[4] + params.omega * (d_equ[4] - tmp_speeds[4]);
+        tmp_cells->speeds[5][id] = tmp_speeds[5] + params.omega * (d_equ[5] - tmp_speeds[5]);
+        tmp_cells->speeds[6][id] = tmp_speeds[6] + params.omega * (d_equ[6] - tmp_speeds[6]);
+        tmp_cells->speeds[7][id] = tmp_speeds[7] + params.omega * (d_equ[7] - tmp_speeds[7]);
+        tmp_cells->speeds[8][id] = tmp_speeds[8] + params.omega * (d_equ[8] - tmp_speeds[8]);
 
         // // // // AVERAGE VELOCITY
         tot_u += sqrtf(u_sq);
         /* increase counter of inspected cells */
         ++tot_cells;
 
-        // tot_u = cond2? tot_u+sqrtf(u_sq): tot_u;
-        // /* increase counter of inspected cells */
-        // tot_cells = cond2? tot_cells+1: tot_cells;
-
       }
-
 
     }
   }
