@@ -390,11 +390,13 @@ __assume((params.nx)%2==0);
         /* compute local density total */
         // const int cond2 = !obstacles[id];
 
-        decimal local_density = 0.f;
-        for (int kk = 0; kk < NSPEEDS; kk++)
-        {
-          local_density += tmp_speeds[kk];
-        }
+        // decimal local_density = 0.f;
+        // for (int kk = 0; kk < NSPEEDS; kk++)
+        // {
+        //   local_density += tmp_speeds[kk];
+        // }
+        decimal local_density = tmp_speeds[0] + tmp_speeds[1] + tmp_speeds[2] + tmp_speeds[3]
+                          + tmp_speeds[4] + tmp_speeds[5] + tmp_speeds[6] + tmp_speeds[7] + tmp_speeds[8];
 
         /* compute x velocity component */
         decimal u_x = (tmp_speeds[1]
@@ -473,12 +475,22 @@ __assume((params.nx)%2==0);
                                          - u_sq / (2.f * c_sq));
 
         // #pragma simd
-        for (int kk = 0; kk < NSPEEDS; kk++)
-        {
-          tmp_cells->speeds[kk][id] = tmp_speeds[kk]
-                                                  + params.omega
-                                                  * (d_equ[kk] - tmp_speeds[kk]);
-        }
+        // for (int kk = 0; kk < NSPEEDS; kk++)
+        // {
+        //   tmp_cells->speeds[kk][id] = tmp_speeds[kk]
+        //                                           + params.omega
+        //                                           * (d_equ[kk] - tmp_speeds[kk]);
+        // }
+
+        tmp_cells->speeds[0][id] = tmp_speeds[0] + params.omega * (d_equ[0] - tmp_speeds[0]);
+        tmp_cells->speeds[1][id] = tmp_speeds[1] + params.omega * (d_equ[1] - tmp_speeds[1]);
+        tmp_cells->speeds[2][id] = tmp_speeds[2] + params.omega * (d_equ[2] - tmp_speeds[2]);
+        tmp_cells->speeds[3][id] = tmp_speeds[3] + params.omega * (d_equ[3] - tmp_speeds[3]);
+        tmp_cells->speeds[4][id] = tmp_speeds[4] + params.omega * (d_equ[4] - tmp_speeds[4]);
+        tmp_cells->speeds[5][id] = tmp_speeds[5] + params.omega * (d_equ[5] - tmp_speeds[5]);
+        tmp_cells->speeds[6][id] = tmp_speeds[6] + params.omega * (d_equ[6] - tmp_speeds[6]);
+        tmp_cells->speeds[7][id] = tmp_speeds[7] + params.omega * (d_equ[7] - tmp_speeds[7]);
+        tmp_cells->speeds[8][id] = tmp_speeds[8] + params.omega * (d_equ[8] - tmp_speeds[8]);
 
         // // // // AVERAGE VELOCITY
         tot_u += sqrtf(u_sq);
