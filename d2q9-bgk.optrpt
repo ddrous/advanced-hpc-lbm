@@ -1,0 +1,850 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (main(int, char **))
+  -> INLINE: (158,5) usage(const char *)
+  -> INLINE: (170,3) initialise(const char *, const char *, t_param *, s_speed *, s_speed *, int **, decimal **)
+    -> INLINE: (577,5) die(const char *, const int, const char *)
+    -> INLINE: (583,20) die(const char *, const int, const char *)
+    -> INLINE: (587,20) die(const char *, const int, const char *)
+    -> INLINE: (591,20) die(const char *, const int, const char *)
+    -> INLINE: (595,20) die(const char *, const int, const char *)
+    -> INLINE: (599,20) die(const char *, const int, const char *)
+    -> INLINE: (603,20) die(const char *, const int, const char *)
+    -> INLINE: (607,20) die(const char *, const int, const char *)
+    -> INLINE: (635,38) _mm_malloc(size_t, size_t)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: (637,34) die(const char *, const int, const char *)
+    -> INLINE: (643,42) _mm_malloc(size_t, size_t)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: (645,38) die(const char *, const int, const char *)
+    -> INLINE: (648,27) _mm_malloc(size_t, size_t)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: (649,31) die(const char *, const int, const char *)
+    -> INLINE: (690,5) die(const char *, const int, const char *)
+    -> INLINE: (697,22) die(const char *, const int, const char *)
+    -> INLINE: (699,40) die(const char *, const int, const char *)
+    -> INLINE: (701,40) die(const char *, const int, const char *)
+    -> INLINE: (703,23) die(const char *, const int, const char *)
+  -> INLINE: (179,19) timestep(const t_param, s_speed *, s_speed *, int *)
+    -> INLINE: (226,3) accelerate_flow(const t_param, const s_speed *__restrict__, const int *)
+    -> INLINE: (227,12) pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *)
+  -> INLINE: (210,3) write_values(const t_param, s_speed *, int *, decimal *)
+    -> INLINE: (784,5) die(const char *, const int, const char *)
+    -> INLINE: (840,5) die(const char *, const int, const char *)
+  -> INLINE: (211,3) finalise(const t_param *, s_speed *, s_speed *, int **, decimal **)
+    -> INLINE: (729,6) _mm_free(void *)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: (730,6) _mm_free(void *)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: (735,3) _mm_free(void *)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: (738,3) _mm_free(void *)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(633,3) inlined into d2q9-bgk.c(170,3)
+   remark #25436: completely unrolled by 9  
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(641,3) inlined into d2q9-bgk.c(170,3)
+   remark #25436: completely unrolled by 9  
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(656,3) inlined into d2q9-bgk.c(170,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(658,5) inlined into d2q9-bgk.c(170,3)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(676,3) inlined into d2q9-bgk.c(170,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(678,5) inlined into d2q9-bgk.c(170,3)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(678,5) inlined into d2q9-bgk.c(170,3)
+      remark #15300: LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(678,5) inlined into d2q9-bgk.c(170,3)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(177,3)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 349
+
+   LOOP BEGIN at d2q9-bgk.c(260,3) inlined into d2q9-bgk.c(179,19)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(260,3) inlined into d2q9-bgk.c(179,19)
+      remark #15301: SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(260,3) inlined into d2q9-bgk.c(179,19)
+   <Remainder loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(336,5) inlined into d2q9-bgk.c(179,19)
+      remark #25261: Invariant Condition eliminated(Proven True) at line 348
+      remark #25258: Invariant Condition eliminated(Loop at level 2 peeled) at line 349 
+      remark #25260: Invariant Condition eliminated(Proven False) at line 349
+      remark #15301: SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(336,5) inlined into d2q9-bgk.c(179,19)
+   <Remainder loop for vectorization>
+      remark #25456: Number of Array Refs Scalar Replaced In Loop: 1
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(333,3) inlined into d2q9-bgk.c(179,19)
+      remark #25261: Invariant Condition eliminated(Proven True) at line 349
+
+      LOOP BEGIN at d2q9-bgk.c(336,5) inlined into d2q9-bgk.c(179,19)
+         remark #25258: Invariant Condition eliminated(Loop at level 2 peeled) at line 348 
+         remark #25260: Invariant Condition eliminated(Proven False) at line 348
+         remark #25258: Invariant Condition eliminated(Loop at level 3 peeled) at line 349 
+         remark #25260: Invariant Condition eliminated(Proven False) at line 349
+         remark #15301: SIMD LOOP WAS VECTORIZED
+
+         LOOP BEGIN at d2q9-bgk.c(394,9) inlined into d2q9-bgk.c(179,19)
+            remark #25436: completely unrolled by 9   (pre-vector) 
+         LOOP END
+
+         LOOP BEGIN at d2q9-bgk.c(438,9) inlined into d2q9-bgk.c(179,19)
+            remark #25436: completely unrolled by 4   (pre-vector) 
+         LOOP END
+
+         LOOP BEGIN at d2q9-bgk.c(476,9) inlined into d2q9-bgk.c(179,19)
+            remark #25436: completely unrolled by 9   (pre-vector) 
+         LOOP END
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(336,5) inlined into d2q9-bgk.c(179,19)
+      <Remainder loop for vectorization>
+         remark #25456: Number of Array Refs Scalar Replaced In Loop: 1
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(787,3) inlined into d2q9-bgk.c(210,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(789,5) inlined into d2q9-bgk.c(210,3)
+      remark #25460: No loop optimizations reported
+
+      LOOP BEGIN at d2q9-bgk.c(802,9) inlined into d2q9-bgk.c(210,3)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(727,14) inlined into d2q9-bgk.c(211,3)
+   remark #25436: completely unrolled by 9  
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(231,18):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+d2q9-bgk.c(232,13):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+d2q9-bgk.c(233,16):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+d2q9-bgk.c(144,1):remark #34051: REGISTER ALLOCATION : [main] d2q9-bgk.c:144
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   30[ rax rdx rcx rbx rsi rdi r8-r15 zmm0-zmm15]
+        
+    Routine temporaries
+        Total         :    2986
+            Global    :     483
+            Local     :    2503
+        Regenerable   :     382
+        Spilled       :     107
+        
+    Routine stack
+        Variables     :    2188 bytes*
+            Reads     :     528 [3.93e+04 ~ 15.4%]
+            Writes    :     172 [1.41e+04 ~ 5.5%]
+        Spills        :     984 bytes*
+            Reads     :     186 [1.62e+04 ~ 6.4%]
+            Writes    :     133 [1.11e+04 ~ 4.4%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: timestep(const t_param, s_speed *, s_speed *, int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (timestep(const t_param, s_speed *, s_speed *, int *))
+  -> INLINE: (226,3) accelerate_flow(const t_param, const s_speed *__restrict__, const int *)
+  -> (227,12) pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(260,3) inlined into d2q9-bgk.c(226,3)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(260,3) inlined into d2q9-bgk.c(226,3)
+<Remainder loop for vectorization>
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(227,12):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (8, 0), and destination (alignment, offset): (1, 0)
+d2q9-bgk.c(231,18):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (1, 0), and destination (alignment, offset): (16, 0)
+d2q9-bgk.c(232,13):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (1, 0), and destination (alignment, offset): (1, 0)
+d2q9-bgk.c(233,16):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (1, 0)
+d2q9-bgk.c(223,1):remark #34051: REGISTER ALLOCATION : [timestep] d2q9-bgk.c:223
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   31[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm15]
+        
+    Routine temporaries
+        Total         :     157
+            Global    :      51
+            Local     :     106
+        Regenerable   :      14
+        Spilled       :      19
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      96 bytes*
+            Reads     :      12 [1.08e+01 ~ 1.7%]
+            Writes    :      12 [1.08e+01 ~ 1.7%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *))
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(336,5)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 348
+   remark #25258: Invariant Condition eliminated(Loop at level 1 peeled) at line 349 
+   remark #25260: Invariant Condition eliminated(Proven False) at line 349
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(336,5)
+<Remainder loop for vectorization>
+   remark #25456: Number of Array Refs Scalar Replaced In Loop: 1
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(333,3)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 349
+
+   LOOP BEGIN at d2q9-bgk.c(336,5)
+      remark #25258: Invariant Condition eliminated(Loop at level 1 peeled) at line 348 
+      remark #25260: Invariant Condition eliminated(Proven False) at line 348
+      remark #25258: Invariant Condition eliminated(Loop at level 2 peeled) at line 349 
+      remark #25260: Invariant Condition eliminated(Proven False) at line 349
+      remark #15301: SIMD LOOP WAS VECTORIZED
+
+      LOOP BEGIN at d2q9-bgk.c(394,9)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(438,9)
+         remark #25436: completely unrolled by 4   (pre-vector) 
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(476,9)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(336,5)
+   <Remainder loop for vectorization>
+      remark #25456: Number of Array Refs Scalar Replaced In Loop: 1
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(303,1):remark #34051: REGISTER ALLOCATION : [pro_re_col_av] d2q9-bgk.c:303
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   31[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm15]
+        
+    Routine temporaries
+        Total         :    1980
+            Global    :     312
+            Local     :    1668
+        Regenerable   :      63
+        Spilled       :      98
+        
+    Routine stack
+        Variables     :     864 bytes*
+            Reads     :      86 [0.00e+00 ~ 0.0%]
+            Writes    :      52 [0.00e+00 ~ 0.0%]
+        Spills        :     904 bytes*
+            Reads     :     147 [4.33e+03 ~ 8.7%]
+            Writes    :     109 [3.14e+03 ~ 6.4%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: accelerate_flow(const t_param, const s_speed *__restrict__, const int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (accelerate_flow(const t_param, const s_speed *__restrict__, const int *))
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(260,3)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(260,3)
+<Remainder loop for vectorization>
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(241,104):remark #34051: REGISTER ALLOCATION : [accelerate_flow] d2q9-bgk.c:241
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   31[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm15]
+        
+    Routine temporaries
+        Total         :     136
+            Global    :      48
+            Local     :      88
+        Regenerable   :      12
+        Spilled       :      14
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      56 bytes*
+            Reads     :       7 [6.30e+00 ~ 1.0%]
+            Writes    :       7 [6.30e+00 ~ 1.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: av_velocity(const t_param, s_speed *, int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (av_velocity(const t_param, s_speed *, int *))
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(515,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(517,5)
+      remark #25460: No loop optimizations reported
+
+      LOOP BEGIN at d2q9-bgk.c(525,9)
+         remark #25436: completely unrolled by 9  
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(507,1):remark #34051: REGISTER ALLOCATION : [av_velocity] d2q9-bgk.c:507
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   28[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm12]
+        
+    Routine temporaries
+        Total         :      78
+            Global    :      21
+            Local     :      57
+        Regenerable   :       5
+        Spilled       :       7
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      56 bytes*
+            Reads     :       7 [9.90e+00 ~ 1.1%]
+            Writes    :       7 [9.90e+00 ~ 1.1%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: finalise(const t_param *, s_speed *, s_speed *, int **, decimal **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (finalise(const t_param *, s_speed *, s_speed *, int **, decimal **))
+  -> INLINE: (729,6) _mm_free(void *)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (730,6) _mm_free(void *)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (735,3) _mm_free(void *)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (738,3) _mm_free(void *)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(727,14)
+   remark #25436: completely unrolled by 9  
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(723,1):remark #34051: REGISTER ALLOCATION : [finalise] d2q9-bgk.c:723
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   11[ rax rdx rcx rbx rbp rsi rdi r8 r12-r13 r15]
+        
+    Routine temporaries
+        Total         :      57
+            Global    :      11
+            Local     :      46
+        Regenerable   :       2
+        Spilled       :       5
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: calc_reynolds(const t_param, s_speed *, int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (calc_reynolds(const t_param, s_speed *, int *))
+  -> INLINE: (749,10) av_velocity(const t_param, s_speed *, int *)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(515,3) inlined into d2q9-bgk.c(749,10)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(517,5) inlined into d2q9-bgk.c(749,10)
+      remark #25460: No loop optimizations reported
+
+      LOOP BEGIN at d2q9-bgk.c(525,9) inlined into d2q9-bgk.c(749,10)
+         remark #25436: completely unrolled by 9  
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(746,1):remark #34051: REGISTER ALLOCATION : [calc_reynolds] d2q9-bgk.c:746
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   30[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm14]
+        
+    Routine temporaries
+        Total         :      85
+            Global    :      22
+            Local     :      63
+        Regenerable   :       7
+        Spilled       :       7
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      56 bytes*
+            Reads     :       7 [9.90e+00 ~ 1.0%]
+            Writes    :       7 [9.90e+00 ~ 1.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: total_density(const t_param, const s_speed *__restrict__)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (total_density(const t_param, const s_speed *__restrict__))
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(760,7)
+   remark #25444: Loopnest Interchanged: ( 1 2 3 ) --> ( 3 1 2 )
+
+   LOOP BEGIN at d2q9-bgk.c(756,3)
+      remark #25460: No loop optimizations reported
+
+      LOOP BEGIN at d2q9-bgk.c(758,5)
+         remark #15301: PERMUTED LOOP WAS VECTORIZED
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(758,5)
+      <Remainder loop for vectorization>
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(753,1):remark #34051: REGISTER ALLOCATION : [total_density] d2q9-bgk.c:753
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   15[ rax rdx rcx rbp rsi rdi r8-r12 zmm0-zmm3]
+        
+    Routine temporaries
+        Total         :      33
+            Global    :      22
+            Local     :      11
+        Regenerable   :       4
+        Spilled       :       2
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: write_values(const t_param, s_speed *, int *, decimal *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (write_values(const t_param, s_speed *, int *, decimal *))
+  -> INLINE: (784,5) die(const char *, const int, const char *)
+  -> INLINE: (840,5) die(const char *, const int, const char *)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(787,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(789,5)
+      remark #25460: No loop optimizations reported
+
+      LOOP BEGIN at d2q9-bgk.c(802,9)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(771,1):remark #34051: REGISTER ALLOCATION : [write_values] d2q9-bgk.c:771
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   26[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm10]
+        
+    Routine temporaries
+        Total         :     157
+            Global    :      37
+            Local     :     120
+        Regenerable   :      47
+        Spilled       :      11
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      48 bytes*
+            Reads     :       6 [4.83e+01 ~ 3.3%]
+            Writes    :       6 [1.26e+01 ~ 0.9%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: die(const char *, const int, const char *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (die(const char *, const int, const char *))
+
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(854,1):remark #34051: REGISTER ALLOCATION : [die] d2q9-bgk.c:854
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :    6[ rax rdx rcx rbx rsi rdi]
+        
+    Routine temporaries
+        Total         :      28
+            Global    :       1
+            Local     :      27
+        Regenerable   :       9
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: usage(const char *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (usage(const char *))
+
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(862,1):remark #34051: REGISTER ALLOCATION : [usage] d2q9-bgk.c:862
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :    4[ rax rdx rsi rdi]
+        
+    Routine temporaries
+        Total         :      15
+            Global    :       0
+            Local     :      15
+        Regenerable   :       4
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: initialise(const char *, const char *, t_param *, s_speed *, s_speed *, int **, decimal **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (initialise(const char *, const char *, t_param *, s_speed *, s_speed *, int **, decimal **))
+  -> INLINE: (577,5) die(const char *, const int, const char *)
+  -> INLINE: (583,20) die(const char *, const int, const char *)
+  -> INLINE: (587,20) die(const char *, const int, const char *)
+  -> INLINE: (591,20) die(const char *, const int, const char *)
+  -> INLINE: (595,20) die(const char *, const int, const char *)
+  -> INLINE: (599,20) die(const char *, const int, const char *)
+  -> INLINE: (603,20) die(const char *, const int, const char *)
+  -> INLINE: (607,20) die(const char *, const int, const char *)
+  -> INLINE: (635,38) _mm_malloc(size_t, size_t)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (637,34) die(const char *, const int, const char *)
+  -> INLINE: (643,42) _mm_malloc(size_t, size_t)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (645,38) die(const char *, const int, const char *)
+  -> INLINE: (648,27) _mm_malloc(size_t, size_t)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (649,31) die(const char *, const int, const char *)
+  -> INLINE: (690,5) die(const char *, const int, const char *)
+  -> INLINE: (697,22) die(const char *, const int, const char *)
+  -> INLINE: (699,40) die(const char *, const int, const char *)
+  -> INLINE: (701,40) die(const char *, const int, const char *)
+  -> INLINE: (703,23) die(const char *, const int, const char *)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(633,3)
+   remark #25436: completely unrolled by 9  
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(641,3)
+   remark #25436: completely unrolled by 9  
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(656,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(658,5)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(676,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at d2q9-bgk.c(678,5)
+      remark #25408: memset generated
+
+      LOOP BEGIN at d2q9-bgk.c(678,5)
+      <Peeled loop for vectorization>
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(678,5)
+         remark #15300: LOOP WAS VECTORIZED
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(678,5)
+      <Remainder loop for vectorization>
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(680,9):remark #34026: call to memset implemented as a call to optimized library version
+d2q9-bgk.c(564,1):remark #34051: REGISTER ALLOCATION : [initialise] d2q9-bgk.c:564
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   19[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm3]
+        
+    Routine temporaries
+        Total         :     619
+            Global    :     115
+            Local     :     504
+        Regenerable   :     259
+        Spilled       :      13
+        
+    Routine stack
+        Variables     :    1060 bytes*
+            Reads     :      22 [3.30e+01 ~ 2.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      56 bytes*
+            Reads     :      15 [3.26e+01 ~ 1.9%]
+            Writes    :      10 [6.40e+00 ~ 0.4%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
