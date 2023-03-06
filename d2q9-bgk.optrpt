@@ -1,0 +1,1116 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.1.132 Build 20161005
+
+Compiler options: -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native -fno-tree-vectorize -lm -o d2q9-bgk
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: true
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (main(int, char **)) [1/12=8.3%] d2q9-bgk.c(131,1)
+  -> INLINE: (145,5) usage(const char *) (isz = 6) (sz = 10)
+    -> EXTERN: (818,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (819,3) exit(int)
+  -> EXTERN: (154,3) gettimeofday(struct timeval *__restrict__, __timezone_ptr_t)
+  -> INLINE: (157,3) initialise(const char *, const char *, t_param *, t_speed **, t_speed **, int **, decimal **) (isz = 699) (sz = 718)
+    -> EXTERN: (534,8) fopen(const char *__restrict__, const char *__restrict__)
+    -> EXTERN: (538,5) sprintf(char *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (539,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (543,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (545,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (547,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (549,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (551,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (553,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (555,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (557,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (559,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (561,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (563,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (565,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (567,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (569,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (572,3) fclose(FILE *)
+    -> EXTERN: (594,26) malloc(size_t)
+    -> INLINE: (596,27) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (599,30) malloc(size_t)
+    -> INLINE: (601,31) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (604,20) malloc(size_t)
+    -> INLINE: (606,31) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (642,8) fopen(const char *__restrict__, const char *__restrict__)
+    -> EXTERN: (646,5) sprintf(char *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (647,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (651,20) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (651,20) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+    -> INLINE: (654,22) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> INLINE: (656,40) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> INLINE: (658,40) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> INLINE: (660,23) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (667,3) fclose(FILE *)
+    -> EXTERN: (673,28) malloc(size_t)
+  -> EXTERN: (160,3) gettimeofday(struct timeval *__restrict__, __timezone_ptr_t)
+  -> INLINE: (166,23) timestep(const t_param, t_speed *, t_speed *, int *) (isz = 142) (sz = 155)
+    -> INLINE: (212,3) accelerate_flow(const t_param, t_speed *, const int *) (isz = 135) (sz = 146)
+    -> INLINE: (213,12) pro_re_col_av(const t_param, const t_speed *, t_speed *, const int *) (isz = 451) (sz = 464)
+  -> EXTERN: (184,3) gettimeofday(struct timeval *__restrict__, __timezone_ptr_t)
+  -> EXTERN: (191,3) gettimeofday(struct timeval *__restrict__, __timezone_ptr_t)
+  -> EXTERN: (196,3) printf(const char *__restrict__, ...)
+  -> EXTERN: (198,3) printf(const char *__restrict__, ...)
+  -> EXTERN: (199,3) printf(const char *__restrict__, ...)
+  -> EXTERN: (200,3) printf(const char *__restrict__, ...)
+  -> EXTERN: (201,3) printf(const char *__restrict__, ...)
+  -> INLINE: (202,3) write_values(const t_param, t_speed *, int *, decimal *) (isz = 263) (sz = 276)
+    -> EXTERN: (735,8) fopen(const char *__restrict__, const char *__restrict__)
+    -> INLINE: (739,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (785,7) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (789,3) fclose(FILE *)
+    -> EXTERN: (791,8) fopen(const char *__restrict__, const char *__restrict__)
+    -> INLINE: (795,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+      -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+      -> EXTERN: (812,3) fflush(FILE *)
+      -> EXTERN: (813,3) exit(int)
+    -> EXTERN: (800,5) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (803,3) fclose(FILE *)
+  -> INLINE: (203,3) finalise(const t_param *, t_speed **, t_speed **, int **, decimal **) (isz = 14) (sz = 29)
+    -> EXTERN: (684,3) free(void *)
+    -> EXTERN: (687,3) free(void *)
+    -> EXTERN: (690,3) free(void *)
+    -> EXTERN: (693,3) free(void *)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(613,3) inlined into d2q9-bgk.c(157,3)
+   remark #25101: Loop Interchange not done due to: Original Order seems proper
+   remark #25452: Original Order found to be proper, but by a close margin
+   remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+   LOOP BEGIN at d2q9-bgk.c(615,5) inlined into d2q9-bgk.c(157,3)
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+      LOOP BEGIN at d2q9-bgk.c(625,9) inlined into d2q9-bgk.c(157,3)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25436: completely unrolled by 4  
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(633,3) inlined into d2q9-bgk.c(157,3)
+   remark #15382: vectorization support: call to function ?1memset cannot be vectorized   [ d2q9-bgk.c(637,9) ]
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between obstacles[ii+jj*params.nx] (637:9) and obstacles[ii+jj*params.nx] (637:9)
+   remark #15346: vector dependence: assumed OUTPUT dependence between obstacles[ii+jj*params.nx] (637:9) and obstacles[ii+jj*params.nx] (637:9)
+
+   LOOP BEGIN at d2q9-bgk.c(635,5) inlined into d2q9-bgk.c(157,3)
+      remark #25408: memset generated
+      remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+
+      LOOP BEGIN at d2q9-bgk.c(635,5) inlined into d2q9-bgk.c(157,3)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25439: unrolled with remainder by 2  
+         remark #25015: Estimate of max trip count of loop=24
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(635,5) inlined into d2q9-bgk.c(157,3)
+      <Remainder>
+         remark #25015: Estimate of max trip count of loop=24
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(651,3) inlined into d2q9-bgk.c(157,3)
+   remark #15521: loop was not vectorized: loop control variable was not identified. Explicitly compute the iteration count before executing the loop or try using canonical loop form from OpenMP specification
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(164,3)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 321
+   remark #15541: outer loop was not auto-vectorized: consider using SIMD directive
+
+   LOOP BEGIN at d2q9-bgk.c(231,3) inlined into d2q9-bgk.c(166,23)
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(308,5) inlined into d2q9-bgk.c(166,23)
+      remark #25261: Invariant Condition eliminated(Proven True) at line 320
+      remark #25258: Invariant Condition eliminated(Loop at level 2 peeled) at line 321 
+      remark #25260: Invariant Condition eliminated(Proven False) at line 321
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed FLOW dependence between tmp_speeds[0] (327:7) and tmp_speeds[kk] (438:11)
+      remark #15346: vector dependence: assumed ANTI dependence between tmp_speeds[kk] (438:11) and tmp_speeds[0] (327:7)
+      remark #25456: Number of Array Refs Scalar Replaced In Loop: 1
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(306,3) inlined into d2q9-bgk.c(166,23)
+      remark #25261: Invariant Condition eliminated(Proven True) at line 321
+      remark #15541: outer loop was not auto-vectorized: consider using SIMD directive
+
+      LOOP BEGIN at d2q9-bgk.c(308,5) inlined into d2q9-bgk.c(166,23)
+         remark #25258: Invariant Condition eliminated(Loop at level 2 peeled) at line 320 
+         remark #25260: Invariant Condition eliminated(Proven False) at line 320
+         remark #25258: Invariant Condition eliminated(Loop at level 3 peeled) at line 321 
+         remark #25260: Invariant Condition eliminated(Proven False) at line 321
+         remark #15344: loop was not vectorized: vector dependence prevents vectorization
+         remark #15346: vector dependence: assumed FLOW dependence between tmp_speeds[0] (327:7) and tmp_speeds[kk] (438:11)
+         remark #15346: vector dependence: assumed ANTI dependence between tmp_speeds[kk] (438:11) and tmp_speeds[0] (327:7)
+         remark #25456: Number of Array Refs Scalar Replaced In Loop: 1
+
+         LOOP BEGIN at d2q9-bgk.c(367,9) inlined into d2q9-bgk.c(166,23)
+            remark #25436: completely unrolled by 9   (pre-vector) 
+         LOOP END
+
+         LOOP BEGIN at d2q9-bgk.c(436,9) inlined into d2q9-bgk.c(166,23)
+            remark #25436: completely unrolled by 9   (pre-vector) 
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(742,3) inlined into d2q9-bgk.c(202,3)
+   remark #15382: vectorization support: call to function fprintf(FILE *__restrict__, const char *__restrict__, ...) cannot be vectorized   [ d2q9-bgk.c(785,7) ]
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7) and call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7)
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7) and call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7)
+
+   LOOP BEGIN at d2q9-bgk.c(744,5) inlined into d2q9-bgk.c(202,3)
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+      LOOP BEGIN at d2q9-bgk.c(757,9) inlined into d2q9-bgk.c(202,3)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(798,3) inlined into d2q9-bgk.c(202,3)
+   remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(637,9):remark #34014: optimization advice for memset: increase the destination's alignment to 16 (and use __assume_aligned) to speed up library implementation
+d2q9-bgk.c(637,9):remark #34026: call to memset implemented as a call to optimized library version
+d2q9-bgk.c(131,1):remark #34051: REGISTER ALLOCATION : [main] d2q9-bgk.c:131
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   30[ rax rdx rcx rbx rsi rdi r8-r15 zmm0-zmm15]
+        
+    Routine temporaries
+        Total         :    1288
+            Global    :     200
+            Local     :    1088
+        Regenerable   :     337
+        Spilled       :      74
+        
+    Routine stack
+        Variables     :    1084 bytes*
+            Reads     :      29 [4.90e+01 ~ 0.0%]
+            Writes    :       2 [2.00e+00 ~ 0.0%]
+        Spills        :     552 bytes*
+            Reads     :     118 [6.74e+03 ~ 5.0%]
+            Writes    :     101 [6.78e+03 ~ 5.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: timestep(const t_param, t_speed *, t_speed *, int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (timestep(const t_param, t_speed *, t_speed *, int *)) [2/12=16.7%] d2q9-bgk.c(209,1)
+  -> INLINE: (212,3) accelerate_flow(const t_param, t_speed *, const int *) (isz = 135) (sz = 146)
+  -> (213,12) pro_re_col_av(const t_param, const t_speed *, t_speed *, const int *) (isz = 451) (sz = 464)
+     [[ Inlining would exceed -inline-max-size value (464>230) <1>]]
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(231,3) inlined into d2q9-bgk.c(212,3)
+   remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(213,12):remark #34014: optimization advice for memcpy: increase the source's alignment to 16 (and use __assume_aligned) to increase the width of loads
+d2q9-bgk.c(213,12):remark #34014: optimization advice for memcpy: increase the destination's alignment to 16 (and use __assume_aligned) to increase the width of stores
+d2q9-bgk.c(213,12):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (8, 0), and destination (alignment, offset): (1, 0)
+d2q9-bgk.c(209,1):remark #34051: REGISTER ALLOCATION : [timestep] d2q9-bgk.c:209
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   17[ rax rdx rcx rsi rdi r8-r10 zmm0-zmm8]
+        
+    Routine temporaries
+        Total         :      55
+            Global    :      24
+            Local     :      31
+        Regenerable   :      10
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: pro_re_col_av(const t_param, const t_speed *, t_speed *, const int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (pro_re_col_av(const t_param, const t_speed *, t_speed *, const int *)) [3/12=25.0%] d2q9-bgk.c(258,1)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(306,3)
+   remark #15541: outer loop was not auto-vectorized: consider using SIMD directive
+
+   LOOP BEGIN at d2q9-bgk.c(308,5)
+      remark #15541: outer loop was not auto-vectorized: consider using SIMD directive
+      remark #25456: Number of Array Refs Scalar Replaced In Loop: 1
+
+      LOOP BEGIN at d2q9-bgk.c(367,9)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(422,9)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25436: completely unrolled by 4  
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(436,9)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(258,1):remark #34051: REGISTER ALLOCATION : [pro_re_col_av] d2q9-bgk.c:258
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   31[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm15]
+        
+    Routine temporaries
+        Total         :     199
+            Global    :      47
+            Local     :     152
+        Regenerable   :      12
+        Spilled       :      24
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :     192 bytes*
+            Reads     :      26 [2.34e+02 ~ 6.6%]
+            Writes    :      26 [1.38e+02 ~ 3.9%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: accelerate_flow(const t_param, t_speed *, const int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (accelerate_flow(const t_param, t_speed *, const int *)) [4/12=33.3%] d2q9-bgk.c(221,80)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(231,3)
+   remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(221,80):remark #34051: REGISTER ALLOCATION : [accelerate_flow] d2q9-bgk.c:221
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   16[ rax rdx rcx rsi rdi r8-r9 zmm0-zmm8]
+        
+    Routine temporaries
+        Total         :      44
+            Global    :      21
+            Local     :      23
+        Regenerable   :       8
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: av_velocity(const t_param, t_speed *, int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (av_velocity(const t_param, t_speed *, int *)) [5/12=41.7%] d2q9-bgk.c(469,1)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(477,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed FLOW dependence between tot_cells (511:11) and tot_cells (479:17)
+   remark #15346: vector dependence: assumed ANTI dependence between tot_cells (479:17) and tot_cells (511:11)
+   remark #15346: vector dependence: assumed ANTI dependence between tot_cells (479:17) and tot_cells (511:11)
+
+   LOOP BEGIN at d2q9-bgk.c(479,5)
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+      LOOP BEGIN at d2q9-bgk.c(487,9)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25436: completely unrolled by 9  
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(469,1):remark #34051: REGISTER ALLOCATION : [av_velocity] d2q9-bgk.c:469
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   23[ rax rdx rcx rbx rbp rsi rdi r8-r11 r15 zmm0-zmm10]
+        
+    Routine temporaries
+        Total         :      64
+            Global    :      22
+            Local     :      42
+        Regenerable   :       5
+        Spilled       :       3
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      24 bytes*
+            Reads     :       3 [2.70e+00 ~ 0.4%]
+            Writes    :       3 [2.70e+00 ~ 0.4%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: finalise(const t_param *, t_speed **, t_speed **, int **, decimal **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (finalise(const t_param *, t_speed **, t_speed **, int **, decimal **)) [6/12=50.0%] d2q9-bgk.c(680,1)
+  -> EXTERN: (684,3) free(void *)
+  -> EXTERN: (687,3) free(void *)
+  -> EXTERN: (690,3) free(void *)
+  -> EXTERN: (693,3) free(void *)
+
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(680,1):remark #34051: REGISTER ALLOCATION : [finalise] d2q9-bgk.c:680
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   10[ rax rdx rcx rbx rbp rsi rdi r8 r12-r13]
+        
+    Routine temporaries
+        Total         :      24
+            Global    :      10
+            Local     :      14
+        Regenerable   :       1
+        Spilled       :       4
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: calc_reynolds(const t_param, t_speed *, int *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (calc_reynolds(const t_param, t_speed *, int *)) [7/12=58.3%] d2q9-bgk.c(701,1)
+  -> INLINE: (704,10) av_velocity(const t_param, t_speed *, int *) (isz = 153) (sz = 164)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(477,3) inlined into d2q9-bgk.c(704,10)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed FLOW dependence between tot_cells (511:11) and tot_cells (479:17)
+   remark #15346: vector dependence: assumed ANTI dependence between tot_cells (479:17) and tot_cells (511:11)
+   remark #15346: vector dependence: assumed ANTI dependence between tot_cells (479:17) and tot_cells (511:11)
+
+   LOOP BEGIN at d2q9-bgk.c(479,5) inlined into d2q9-bgk.c(704,10)
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+      LOOP BEGIN at d2q9-bgk.c(487,9) inlined into d2q9-bgk.c(704,10)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25436: completely unrolled by 9  
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(701,1):remark #34051: REGISTER ALLOCATION : [calc_reynolds] d2q9-bgk.c:701
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   25[ rax rdx rcx rbx rbp rsi rdi r8-r11 r15 zmm0-zmm12]
+        
+    Routine temporaries
+        Total         :      71
+            Global    :      23
+            Local     :      48
+        Regenerable   :       7
+        Spilled       :       3
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      24 bytes*
+            Reads     :       3 [2.70e+00 ~ 0.4%]
+            Writes    :       3 [2.70e+00 ~ 0.4%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: total_density(const t_param, t_speed *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (total_density(const t_param, t_speed *)) [8/12=66.7%] d2q9-bgk.c(708,1)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(711,3)
+   remark #25101: Loop Interchange not done due to: Original Order seems proper
+   remark #25452: Original Order found to be proper, but by a close margin
+   remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+   LOOP BEGIN at d2q9-bgk.c(713,5)
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+      LOOP BEGIN at d2q9-bgk.c(715,7)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25436: completely unrolled by 9  
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(708,1):remark #34051: REGISTER ALLOCATION : [total_density] d2q9-bgk.c:708
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   10[ rax rdx rcx rsi rdi r8-r11 zmm0]
+        
+    Routine temporaries
+        Total         :      31
+            Global    :      18
+            Local     :      13
+        Regenerable   :       4
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: write_values(const t_param, t_speed *, int *, decimal *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (write_values(const t_param, t_speed *, int *, decimal *)) [9/12=75.0%] d2q9-bgk.c(726,1)
+  -> EXTERN: (735,8) fopen(const char *__restrict__, const char *__restrict__)
+  -> INLINE: (739,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (785,7) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+  -> EXTERN: (789,3) fclose(FILE *)
+  -> EXTERN: (791,8) fopen(const char *__restrict__, const char *__restrict__)
+  -> INLINE: (795,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (800,5) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+  -> EXTERN: (803,3) fclose(FILE *)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(742,3)
+   remark #15382: vectorization support: call to function fprintf(FILE *__restrict__, const char *__restrict__, ...) cannot be vectorized   [ d2q9-bgk.c(785,7) ]
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7) and call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7)
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7) and call:fprintf(FILE *__restrict__, const char *__restrict__, ...) (785:7)
+
+   LOOP BEGIN at d2q9-bgk.c(744,5)
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+      LOOP BEGIN at d2q9-bgk.c(757,9)
+         remark #25436: completely unrolled by 9   (pre-vector) 
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(798,3)
+   remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(726,1):remark #34051: REGISTER ALLOCATION : [write_values] d2q9-bgk.c:726
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   23[ rax rdx rcx rbx rbp rsi rdi r8 r12-r15 zmm0-zmm10]
+        
+    Routine temporaries
+        Total         :     143
+            Global    :      38
+            Local     :     105
+        Regenerable   :      47
+        Spilled       :      12
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      56 bytes*
+            Reads     :       7 [5.28e+01 ~ 3.9%]
+            Writes    :       7 [1.71e+01 ~ 1.3%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: die(const char *, const int, const char *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (die(const char *, const int, const char *)) [10/12=83.3%] d2q9-bgk.c(809,1)
+  -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+  -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+  -> EXTERN: (812,3) fflush(FILE *)
+  -> EXTERN: (813,3) exit(int)
+
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(809,1):remark #34051: REGISTER ALLOCATION : [die] d2q9-bgk.c:809
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :    6[ rax rdx rcx rbx rsi rdi]
+        
+    Routine temporaries
+        Total         :      28
+            Global    :       1
+            Local     :      27
+        Regenerable   :       9
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: usage(const char *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (usage(const char *)) [11/12=91.7%] d2q9-bgk.c(817,1)
+  -> EXTERN: (818,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+  -> EXTERN: (819,3) exit(int)
+
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(817,1):remark #34051: REGISTER ALLOCATION : [usage] d2q9-bgk.c:817
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :    4[ rax rdx rsi rdi]
+        
+    Routine temporaries
+        Total         :      15
+            Global    :       0
+            Local     :      15
+        Regenerable   :       4
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: initialise(const char *, const char *, t_param *, t_speed **, t_speed **, int **, decimal **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (initialise(const char *, const char *, t_param *, t_speed **, t_speed **, int **, decimal **)) [12/12=100.0%] d2q9-bgk.c(526,1)
+  -> EXTERN: (534,8) fopen(const char *__restrict__, const char *__restrict__)
+  -> EXTERN: (538,5) sprintf(char *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (539,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (543,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (545,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (547,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (549,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (551,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (553,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (555,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (557,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (559,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (561,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (563,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (565,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (567,12) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (569,20) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (572,3) fclose(FILE *)
+  -> EXTERN: (594,26) malloc(size_t)
+  -> INLINE: (596,27) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (599,30) malloc(size_t)
+  -> INLINE: (601,31) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (604,20) malloc(size_t)
+  -> INLINE: (606,31) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (642,8) fopen(const char *__restrict__, const char *__restrict__)
+  -> EXTERN: (646,5) sprintf(char *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (647,5) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (651,20) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> EXTERN: (651,20) fscanf(FILE *__restrict__, const char *__restrict__, ...)
+  -> INLINE: (654,22) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> INLINE: (656,40) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> INLINE: (658,40) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> INLINE: (660,23) die(const char *, const int, const char *) (isz = 14) (sz = 22)
+    -> EXTERN: (810,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (811,3) fprintf(FILE *__restrict__, const char *__restrict__, ...)
+    -> EXTERN: (812,3) fflush(FILE *)
+    -> EXTERN: (813,3) exit(int)
+  -> EXTERN: (667,3) fclose(FILE *)
+  -> EXTERN: (673,28) malloc(size_t)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at d2q9-bgk.c(613,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed ANTI dependence between *cells_ptr (625:9) and *cells_ptr (618:9)
+   remark #15346: vector dependence: assumed FLOW dependence between *cells_ptr (618:9) and *cells_ptr (625:9)
+   remark #15346: vector dependence: assumed FLOW dependence between *cells_ptr (618:9) and *cells_ptr (625:9)
+   remark #15346: vector dependence: assumed ANTI dependence between *cells_ptr (625:9) and *cells_ptr (618:9)
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Distributed chunk1>
+      remark #25426: Loop Distributed (6 way) 
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+      remark #25439: unrolled with remainder by 2  
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Remainder, Distributed chunk1>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Distributed chunk2>
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+      remark #25439: unrolled with remainder by 2  
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Remainder, Distributed chunk2>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Distributed chunk3>
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+      remark #25439: unrolled with remainder by 2  
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Remainder, Distributed chunk3>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Distributed chunk4>
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+      remark #25439: unrolled with remainder by 2  
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Remainder, Distributed chunk4>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Distributed chunk5>
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+      remark #25439: unrolled with remainder by 2  
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Remainder, Distributed chunk5>
+   LOOP END
+
+   LOOP BEGIN at d2q9-bgk.c(615,5)
+   <Distributed chunk6>
+      remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+
+      LOOP BEGIN at d2q9-bgk.c(625,9)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25436: completely unrolled by 4  
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(633,3)
+   remark #15382: vectorization support: call to function ?1memset cannot be vectorized   [ d2q9-bgk.c(637,9) ]
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between obstacles_ptr (637:9) and obstacles_ptr (637:9)
+   remark #15346: vector dependence: assumed OUTPUT dependence between obstacles_ptr (637:9) and obstacles_ptr (637:9)
+
+   LOOP BEGIN at d2q9-bgk.c(635,5)
+      remark #25408: memset generated
+      remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+
+      LOOP BEGIN at d2q9-bgk.c(635,5)
+         remark #15540: loop was not vectorized: auto-vectorization is disabled with -no-vec flag
+         remark #25439: unrolled with remainder by 2  
+         remark #25015: Estimate of max trip count of loop=24
+      LOOP END
+
+      LOOP BEGIN at d2q9-bgk.c(635,5)
+      <Remainder>
+         remark #25015: Estimate of max trip count of loop=24
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at d2q9-bgk.c(651,3)
+   remark #15521: loop was not vectorized: loop control variable was not identified. Explicitly compute the iteration count before executing the loop or try using canonical loop form from OpenMP specification
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+d2q9-bgk.c(637,9):remark #34014: optimization advice for memset: increase the destination's alignment to 16 (and use __assume_aligned) to speed up library implementation
+d2q9-bgk.c(637,9):remark #34026: call to memset implemented as a call to optimized library version
+d2q9-bgk.c(526,1):remark #34051: REGISTER ALLOCATION : [initialise] d2q9-bgk.c:526
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   19[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm3]
+        
+    Routine temporaries
+        Total         :     531
+            Global    :      88
+            Local     :     443
+        Regenerable   :     242
+        Spilled       :      13
+        
+    Routine stack
+        Variables     :    1036 bytes*
+            Reads     :       3 [1.63e+01 ~ 0.9%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      56 bytes*
+            Reads     :      12 [4.19e+01 ~ 2.4%]
+            Writes    :       8 [1.81e+00 ~ 0.1%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINING FOOTNOTES:
+
+<1> The function is larger than the inliner would normally inline.  Use the
+    option -inline-max-size to increase the size of any function that would
+    normally be inlined, add "inline __attribute__((always_inline))" to the
+    declaration of the called function, or add "#pragma forceinline" before
+    the call site.
+
