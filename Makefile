@@ -2,9 +2,13 @@
 
 EXE=d2q9-bgk
 
-CC=gcc
-# CFLAGS= -std=c99 -Wall -Ofast -mtune=native
-CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fno-tree-vectorize
+# CC=gcc
+# # CFLAGS= -std=c99 -Wall -Ofast -mtune=native
+# CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fno-tree-vectorize
+# LIBS = -lm
+
+CC=icc
+CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -fno-tree-vectorize -mtune=native
 LIBS = -lm
 
 FINAL_STATE_FILE=./final_state.dat
