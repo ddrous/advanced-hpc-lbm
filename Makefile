@@ -8,7 +8,7 @@ EXE=d2q9-bgk
 # LIBS = -lm
 
 CC=icc
-CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -fno-tree-vectorize -mtune=native
+CFLAGS= -std=c99 -Wall -O0 -qopt-report=5 -fno-tree-vectorize
 LIBS = -lm
 
 FINAL_STATE_FILE=./final_state.dat
