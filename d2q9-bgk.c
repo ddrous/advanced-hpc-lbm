@@ -331,13 +331,12 @@ __assume((params.nx)%2==0);
 
   // omp_set_num_threads(28);
 
-  /* Fused Loop */
+  /* Parallelised and vectorised and Loop */
   #pragma vector aligned
   #pragma simd 
   #pragma omp parallel for collapse(2) reduction(+:tot_u,tot_cells)
   for (int jj = 0; jj < params.ny; jj++)
   {
-    // #pragma omp parallel for simd
     // #pragma simd
     for (int ii = 0; ii < params.nx; ii++)     
     {
