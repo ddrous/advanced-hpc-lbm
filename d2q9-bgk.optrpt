@@ -4,7 +4,7 @@ See "https://software.intel.com/en-us/intel-advisor-xe" for details.
 
 Intel(R) C Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.1.132 Build 20161005
 
-Compiler options: -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native -lm -o d2q9-bgk
+Compiler options: -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native -ftree-vectorize -o d2q9-bgk
 
     Report from: Interprocedural optimizations [ipo]
 

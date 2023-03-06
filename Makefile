@@ -11,7 +11,6 @@ CC=icc
 
 CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native
 
-LIBS = -lm
 
 FINAL_STATE_FILE=./final_state.dat
 AV_VELS_FILE=./av_vels.dat
