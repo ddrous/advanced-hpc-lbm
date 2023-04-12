@@ -57,6 +57,7 @@
 #include <sys/resource.h>
 #include <mm_malloc.h>
 #include <omp.h>
+#include <mpi.h>
 
 #define NSPEEDS         9
 #define FINALSTATEFILE  "final_state.dat"
@@ -90,6 +91,12 @@ typedef struct
 } s_speed;
 
 
+
+typedef struct
+{
+  int rank, size, remainder, start, end, row_work, row_start, row_end, down_rank, up_rank;
+} m_info;
+
 /*
 ** function prototypes
 */
@@ -104,12 +111,12 @@ int initialise(const char* paramfile, const char* obstaclefile,
 ** timestep calls, in order, the functions:
 ** accelerate_flow(), propagate(), rebound() & collision()
 */
-decimal timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles);
+decimal timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles, m_info* mpi_info);
 int accelerate_flow(const t_param params, const s_speed* restrict cells, const int* obstacles);
 // int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
 // int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
 // int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles);      // Fusion step !!
+decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info* mpi_info);      // Fusion step !!
 
 int write_values(const t_param params, s_speed* cells, int* obstacles, decimal* av_vels);
 
@@ -133,7 +140,36 @@ void usage(const char* exe);
 
 
 
+int initialise_mpi_info(m_info* mpi_info, t_param *params){
 
+  int size, rank;
+  MPI_Comm_size( MPI_COMM_WORLD , &size);
+  MPI_Comm_rank( MPI_COMM_WORLD , &rank);
+
+  // printf("Hello, I'm rank %d out of %d \n", rank, size);
+  mpi_info->rank = rank;
+  mpi_info->size = size;
+
+  mpi_info->row_work = params->ny / size;
+  mpi_info->row_start = rank * mpi_info->row_work;
+  mpi_info->row_end = mpi_info->row_start + mpi_info->row_work;
+
+  mpi_info->remainder = params->ny % size;
+  if (mpi_info->remainder != 0){
+    mpi_info->row_start += mpi_info->rank;
+    mpi_info->row_end = (rank < mpi_info->remainder) ? mpi_info->row_end+1 : mpi_info->row_end;
+  }
+
+  mpi_info->down_rank = (rank == 0) ? MPI_PROC_NULL: rank - 1;
+  mpi_info->up_rank = (rank == size-1) ? MPI_PROC_NULL: rank + 1;
+
+  mpi_info->start = params->nx * mpi_info->row_start;
+  mpi_info->end = params->nx * mpi_info->row_end;
+
+  printf("Rank %d TotalRank %d Remainder %d Start %d  End %d RowW %d RowS %d RowE %d \n", mpi_info->rank, mpi_info->size, mpi_info->remainder, mpi_info->start, mpi_info->end, mpi_info->row_work, mpi_info->row_start, mpi_info->row_end);
+
+  return rank;
+}
 
 
 /*
@@ -142,6 +178,10 @@ void usage(const char* exe);
 */
 int main(int argc, char* argv[])
 {
+
+  MPI_Init( &argc , &argv);
+
+
   char*    paramfile = NULL;    /* name of the input parameter file */
   char*    obstaclefile = NULL; /* name of a the input obstacle file */
   t_param  params;              /* struct to hold parameter values */
@@ -163,6 +203,7 @@ int main(int argc, char* argv[])
     obstaclefile = argv[2];
   }
 
+
   /* Total/init time starts here: initialise our data structures and load values from file */
   gettimeofday(&timstr, NULL);
   tot_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
@@ -174,9 +215,16 @@ int main(int argc, char* argv[])
   init_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
   comp_tic=init_toc;
 
+
+
+  m_info mpi_info;
+  int rank = initialise_mpi_info(&mpi_info, &params);
+
+
+
   for (int tt = 0; tt < params.maxIters; tt++)
   {
-    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles);    // HERE !!!
+    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles, &mpi_info);    // HERE !!!
     // av_vels[tt] = av_velocity(params, &cells, obstacles);
 
 
@@ -200,14 +248,22 @@ int main(int argc, char* argv[])
   col_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
   tot_toc = col_toc;
   
-  /* write final values and free memory */
-  printf("==done==\n");
-  // printf("Reynolds number:\t\t%.12E\n", calc_reynolds(params, cells, obstacles));
-  printf("Elapsed Init time:\t\t\t%.6lf (s)\n",    init_toc - init_tic);
-  printf("Elapsed Compute time:\t\t\t%.6lf (s)\n", comp_toc - comp_tic);
-  printf("Elapsed Collate time:\t\t\t%.6lf (s)\n", col_toc  - col_tic);
-  printf("Elapsed Total time:\t\t\t%.6lf (s)\n",   tot_toc  - tot_tic);
-  write_values(params, &cells, obstacles, av_vels);
+  
+
+  MPI_Finalize();
+
+
+  if (rank==0){
+    /* write final values and free memory */
+    printf("==done==\n");
+    // printf("Reynolds number:\t\t%.12E\n", calc_reynolds(params, cells, obstacles));
+    printf("Elapsed Init time:\t\t\t%.6lf (s)\n",    init_toc - init_tic);
+    printf("Elapsed Compute time:\t\t\t%.6lf (s)\n", comp_toc - comp_tic);
+    printf("Elapsed Collate time:\t\t\t%.6lf (s)\n", col_toc  - col_tic);
+    printf("Elapsed Total time:\t\t\t%.6lf (s)\n",   tot_toc  - tot_tic);
+    write_values(params, &cells, obstacles, av_vels);
+  }
+
   finalise(&params, &cells, &tmp_cells, &obstacles, &av_vels);
 
   return EXIT_SUCCESS;
@@ -219,12 +275,14 @@ int main(int argc, char* argv[])
 
 
 
-decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles)
+decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info* mpi_info)
 {
   decimal av_vel = 0.;
 
-  accelerate_flow(params, cells, obstacles);
-  av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles);
+  if (mpi_info->rank == 0)
+    accelerate_flow(params, cells, obstacles);
+
+  av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, mpi_info);
 
 
   // Swapp pointers
@@ -276,20 +334,6 @@ __assume((params.nx)%2==0);
       cells->speeds[6][id] = cond ? cells->speeds[6][id]- w2: cells->speeds[6][id];
       cells->speeds[7][id] = cond ? cells->speeds[7][id]- w2: cells->speeds[7][id];
 
-    // if ((!obstacles[id])
-    //     && ((cells->speeds[3][id] - w1) > 0.f)
-    //     && ((cells->speeds[6][id] - w2) > 0.f)
-    //     && ((cells->speeds[7][id] - w2) > 0.f));
-    // {
-    //   /* increase 'east-side' densities */
-    //   cells->speeds[1][id] += w1 ;
-    //   cells->speeds[5][id] +=w2 ;
-    //   cells->speeds[8][id] +=w2 ;
-    //   /* decrease 'west-side' densities */
-    //   cells->speeds[3][id] -=w1 ;
-    //   cells->speeds[6][id] -=w2 ;
-    //   cells->speeds[7][id] -=w2 ;
-    // }
 
   }
 
@@ -299,7 +343,7 @@ __assume((params.nx)%2==0);
 
 
 
-decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles)
+decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info* mpi_info)
 {
 
   for (int kk = 0; kk < NSPEEDS; kk++)
@@ -328,9 +372,8 @@ __assume((params.nx)%2==0);
   tot_u = 0.f;
 
 
-
   /* Fused Loop */
-  for (int jj = 0; jj < params.ny; jj++)
+  for (int jj = mpi_info->row_start; jj < mpi_info->row_end; jj++)
   {
     #pragma simd
     for (int ii = 0; ii < params.nx; ii++)     
@@ -435,18 +478,6 @@ __assume((params.nx)%2==0);
         /* zero velocity density: weight w0_ */
         d_equ[0] = w0_ * local_density
                    * (1.f - u_sq / (2.f * c_sq));
-        /* axis speeds: weight w1_ */
-        // #pragma simd
-        // for (int kk = 1; kk < 5; kk++)
-        // {
-        //   d_equ[kk] = w1_ * local_density * (1.f + u[kk] / c_sq
-        //                                   + (u[kk] * u[kk]) / val1
-        //                                   - u_sq / val2);
-        //   d_equ[kk+4] = w2_ * local_density * (1.f + u[kk+4] / c_sq
-        //                                   + (u[kk+4] * u[kk+4]) / val1
-        //                                   - u_sq / val2);
-        // }
-
 
         d_equ[1] = w1_ * local_density * (1.f + u[1] / c_sq
                                          + (u[1] * u[1]) / (2.f * c_sq * c_sq)

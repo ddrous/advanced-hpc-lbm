@@ -3,7 +3,7 @@
 EXE=d2q9-bgk
 
 # CC=gcc
-CC=icc
+CC=mpiicc
 # CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fno-tree-vectorize
 # CFLAGS= -std=c99 -Wall -Ofast -mtune=native -ftree-vectorize -fopt-info-vec-missed
 # CFLAGS= -std=c99 -Wall -Ofast -ftree-vectorize -fopt-info-vec-optimized
