@@ -2,14 +2,11 @@
 
 EXE=d2q9-bgk
 
-# CC=gcc
-CC=mpiicc
-# CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fno-tree-vectorize
-# CFLAGS= -std=c99 -Wall -Ofast -mtune=native -ftree-vectorize -fopt-info-vec-missed
-# CFLAGS= -std=c99 -Wall -Ofast -ftree-vectorize -fopt-info-vec-optimized
-# CFLAGS= -std=c99 -Wall -Ofast -march=haswell -fopt-info-vec-missed -funsafe-math-optimizations
+# CC=mpiicc
+# CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native
 
-CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native
+CC=mpicc
+CFLAGS= -std=c99 -Wall -Ofast -mtune=native
 
 
 FINAL_STATE_FILE=./final_state.dat

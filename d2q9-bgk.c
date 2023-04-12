@@ -63,6 +63,7 @@
 #define FINALSTATEFILE  "final_state.dat"
 #define AVVELSFILE      "av_vels.dat"
 
+// #define ICC
 
 
 typedef float decimal;        // To switch between double and decimals
@@ -155,9 +156,16 @@ int initialise_mpi_info(m_info* mpi_info, t_param *params){
   mpi_info->row_end = mpi_info->row_start + mpi_info->row_work;
 
   mpi_info->remainder = params->ny % size;
+
   if (mpi_info->remainder != 0){
-    mpi_info->row_start += mpi_info->rank;
-    mpi_info->row_end = (rank < mpi_info->remainder) ? mpi_info->row_end+1 : mpi_info->row_end;
+    if (rank < mpi_info->remainder) {
+      mpi_info->row_start += mpi_info->rank;
+      mpi_info->row_end = mpi_info->row_start + mpi_info->row_work + 1;
+    }
+    else {
+      mpi_info->row_start += mpi_info->remainder;
+      mpi_info->row_end = mpi_info->row_start + mpi_info->row_work;
+    }
   }
 
   mpi_info->down_rank = (rank == 0) ? MPI_PROC_NULL: rank - 1;
@@ -166,7 +174,7 @@ int initialise_mpi_info(m_info* mpi_info, t_param *params){
   mpi_info->start = params->nx * mpi_info->row_start;
   mpi_info->end = params->nx * mpi_info->row_end;
 
-  printf("Rank %d TotalRank %d Remainder %d Start %d  End %d RowW %d RowS %d RowE %d \n", mpi_info->rank, mpi_info->size, mpi_info->remainder, mpi_info->start, mpi_info->end, mpi_info->row_work, mpi_info->row_start, mpi_info->row_end);
+  printf("Rank %d TotalRank %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", mpi_info->rank, mpi_info->size, mpi_info->remainder, mpi_info->row_work, mpi_info->row_start, mpi_info->row_end, mpi_info->start, mpi_info->end);
 
   return rank;
 }
@@ -302,12 +310,15 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
   decimal w1 = params.density * params.accel / 9.f;
   decimal w2 = params.density * params.accel / 36.f;
 
-  for (int kk = 0; kk < NSPEEDS; kk++)
-  {
-    __assume_aligned(cells->speeds[kk], 64);
-  }
-  __assume_aligned(obstacles, 64);
-__assume((params.nx)%2==0);
+  #ifdef ICC
+    for (int kk = 0; kk < NSPEEDS; kk++)
+    {
+      __assume_aligned(cells->speeds[kk], 64);
+    }
+    __assume_aligned(obstacles, 64);
+    __assume((params.nx)%2==0);
+  #endif
+
   // ACCELERATE FLOW
   /* modify the 2nd row of the grid */
   const int jj = params.ny - 2;
@@ -346,14 +357,17 @@ __assume((params.nx)%2==0);
 decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info* mpi_info)
 {
 
-  for (int kk = 0; kk < NSPEEDS; kk++)
-  {
-  __assume_aligned(cells->speeds[kk], 64);
-  __assume_aligned(tmp_cells->speeds[kk], 64);
-  }
+  #ifdef ICC
+    for (int kk = 0; kk < NSPEEDS; kk++)
+    {
+    __assume_aligned(cells->speeds[kk], 64);
+    __assume_aligned(tmp_cells->speeds[kk], 64);
+    }
 
-  __assume_aligned(obstacles, 64);
-__assume((params.nx)%2==0);
+    __assume_aligned(obstacles, 64);
+    __assume((params.nx)%2==0);
+  #endif
+
 
   // /* compute weighting factors */
 
@@ -361,8 +375,8 @@ __assume((params.nx)%2==0);
   const decimal w0_ = 4.f / 9.f;  /* weighting factor */
   const decimal w1_ = 1.f / 9.f;  /* weighting factor */
   const decimal w2_ = 1.f / 36.f; /* weighting factor */
-  const decimal val1 = 2.f * c_sq * c_sq;
-  const decimal val2 = 2.f * c_sq;
+  // const decimal val1 = 2.f * c_sq * c_sq;
+  // const decimal val2 = 2.f * c_sq;
 
 
   int    tot_cells = 1;  /* no. of cells used in calculation */
@@ -675,20 +689,31 @@ int initialise(const char* paramfile, const char* obstaclefile,
   // cells_ptr->speeds = (decimal**)_mm_malloc(sizeof(decimal*) * NSPEEDS, 64);
   for (int i = 0; i < NSPEEDS; i++)
   {
-    cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), 64);
+    #ifdef ICC
+      cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), 64);
+    #else
+      cells_ptr->speeds[i] = (decimal*)malloc(sizeof(decimal) * (params->ny * params->nx));
+    #endif
   }
   if (cells_ptr->speeds == NULL) die("cannot allocate memory for cells", __LINE__, __FILE__);
 
   /* 'helper' grid, used as scratch space */
-  // tmp_cells_ptr->speeds = (decimal**)_mm_malloc(sizeof(decimal*) * NSPEEDS, 64);
   for (int i = 0; i < NSPEEDS; i++)
   {
-    tmp_cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), 64);
+    #ifdef ICC
+      tmp_cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), 64);
+    #else
+      tmp_cells_ptr->speeds[i] = (decimal*)malloc(sizeof(decimal) * (params->ny * params->nx));
+    #endif
   }
   if (tmp_cells_ptr->speeds == NULL) die("cannot allocate memory for cells", __LINE__, __FILE__);
 
   /* the map of obstacles */
-  *obstacles_ptr = (int *)_mm_malloc(sizeof(int) * (params->ny * params->nx), 64);
+  #ifdef ICC
+    *obstacles_ptr = (int *)_mm_malloc(sizeof(int) * (params->ny * params->nx), 64);
+  #else
+    *obstacles_ptr = (int *)malloc(sizeof(int) * (params->ny * params->nx));
+  #endif
   if (*obstacles_ptr == NULL) die("cannot allocate column memory for obstacles", __LINE__, __FILE__);
 
   /* initialise densities */
@@ -769,16 +794,26 @@ int finalise(const t_param* params, s_speed* cells_ptr, s_speed* tmp_cells_ptr,
   */
   for (int i = 0; i < NSPEEDS; i++)
   {
+    #ifdef ICC
      _mm_free(cells_ptr->speeds[i]);
      _mm_free(tmp_cells_ptr->speeds[i]);
+    #else
+     free(cells_ptr->speeds[i]);
+     free(tmp_cells_ptr->speeds[i]);
+    #endif
      cells_ptr->speeds[i] = NULL;
      tmp_cells_ptr->speeds[i] = NULL;
   }
 
-  _mm_free(*obstacles_ptr);
-  *obstacles_ptr = NULL;
+  #ifdef ICC
+    _mm_free(*obstacles_ptr);
+    _mm_free(*av_vels_ptr);
+  #else
+    free(*obstacles_ptr);
+    free(*av_vels_ptr);
+  #endif
 
-  _mm_free(*av_vels_ptr);
+  *obstacles_ptr = NULL;
   *av_vels_ptr = NULL;
 
   return EXIT_SUCCESS;
