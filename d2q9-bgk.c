@@ -64,6 +64,7 @@
 #define AVVELSFILE      "av_vels.dat"
 
 // #define ICC
+#define DEBUG
 
 
 typedef float decimal;        // To switch between double and decimals
@@ -112,12 +113,21 @@ int initialise(const char* paramfile, const char* obstaclefile,
 ** timestep calls, in order, the functions:
 ** accelerate_flow(), propagate(), rebound() & collision()
 */
-decimal timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles, m_info* mpi_info);
+decimal timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles, m_info rank_info);
+
+
+int compute_rank_info(int rank, int size, m_info* rank_info, t_param params);
+
+int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cells, m_info rank_info);
+
 int accelerate_flow(const t_param params, const s_speed* restrict cells, const int* obstacles);
 // int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
 // int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
 // int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info* mpi_info);      // Fusion step !!
+
+decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info);      // Fusion step !!
+
+int collate_data(const t_param params, const s_speed* cells, m_info rank_info);
 
 int write_values(const t_param params, s_speed* cells, int* obstacles, decimal* av_vels);
 
@@ -139,45 +149,6 @@ decimal av_velocity(const t_param params, s_speed* cells, int* obstacles);
 void die(const char* message, const int line, const char* file);
 void usage(const char* exe);
 
-
-
-int initialise_mpi_info(m_info* mpi_info, t_param *params){
-
-  int size, rank;
-  MPI_Comm_size( MPI_COMM_WORLD , &size);
-  MPI_Comm_rank( MPI_COMM_WORLD , &rank);
-
-  // printf("Hello, I'm rank %d out of %d \n", rank, size);
-  mpi_info->rank = rank;
-  mpi_info->size = size;
-
-  mpi_info->row_work = params->ny / size;
-  mpi_info->row_start = rank * mpi_info->row_work;
-  mpi_info->row_end = mpi_info->row_start + mpi_info->row_work;
-
-  mpi_info->remainder = params->ny % size;
-
-  if (mpi_info->remainder != 0){
-    if (rank < mpi_info->remainder) {
-      mpi_info->row_start += mpi_info->rank;
-      mpi_info->row_end = mpi_info->row_start + mpi_info->row_work + 1;
-    }
-    else {
-      mpi_info->row_start += mpi_info->remainder;
-      mpi_info->row_end = mpi_info->row_start + mpi_info->row_work;
-    }
-  }
-
-  mpi_info->down_rank = (rank == 0) ? MPI_PROC_NULL: rank - 1;
-  mpi_info->up_rank = (rank == size-1) ? MPI_PROC_NULL: rank + 1;
-
-  mpi_info->start = params->nx * mpi_info->row_start;
-  mpi_info->end = params->nx * mpi_info->row_end;
-
-  printf("Rank %d TotalRank %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", mpi_info->rank, mpi_info->size, mpi_info->remainder, mpi_info->row_work, mpi_info->row_start, mpi_info->row_end, mpi_info->start, mpi_info->end);
-
-  return rank;
-}
 
 
 /*
@@ -225,21 +196,25 @@ int main(int argc, char* argv[])
 
 
 
-  m_info mpi_info;
-  int rank = initialise_mpi_info(&mpi_info, &params);
+  m_info rank_info;
+  int size, rank;
+  MPI_Comm_size( MPI_COMM_WORLD , &size);
+  MPI_Comm_rank( MPI_COMM_WORLD , &rank);
 
+  compute_rank_info(rank, size, &rank_info, params);
+
+  printf("Rank %d TotalRank %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
 
 
   for (int tt = 0; tt < params.maxIters; tt++)
   {
-    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles, &mpi_info);    // HERE !!!
+    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles, rank_info);    // HERE !!!
     // av_vels[tt] = av_velocity(params, &cells, obstacles);
-
 
     #ifdef DEBUG
         printf("==timestep: %d==\n", tt);
         printf("av velocity: %.12E\n", av_vels[tt]);
-        printf("tot density: %.12E\n", total_density(params, cells));
+        printf("tot density: %.12E\n", total_density(params, &cells));
     #endif
 
   }
@@ -249,14 +224,27 @@ int main(int argc, char* argv[])
   comp_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
   col_tic=comp_toc;
 
+
   // Collate data from ranks here 
+  collate_data(params, &cells, rank_info);
+
+  // for (int tt = 0; tt < params.maxIters; tt++)
+  // {
+  //   av_vels[tt] = av_velocity(params, &cells, obstacles);
+
+  //   #ifdef DEBUG
+  //       printf("== AFTER COLLATE : %d==\n", tt);
+  //       printf("av velocity: %.12E\n", av_vels[tt]);
+  //       printf("tot density: %.12E\n", total_density(params, &cells));
+  //   #endif
+  // }
 
   /* Total/collate time stops here.*/
   gettimeofday(&timstr, NULL);
   col_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
   tot_toc = col_toc;
-  
-  
+
+
 
   MPI_Finalize();
 
@@ -280,18 +268,17 @@ int main(int argc, char* argv[])
 
 
 
-
-
-
-decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info* mpi_info)
+decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info rank_info)
 {
-  decimal av_vel = 0.;
 
-  if (mpi_info->rank == 0)
+  exchange_halos(params, cells, tmp_cells, rank_info);
+
+  if (rank_info.rank == 0)
     accelerate_flow(params, cells, obstacles);
 
-  av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, mpi_info);
+  decimal av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, rank_info);
 
+  // printf("This is what we have: %lf \n", av_vel);
 
   // Swapp pointers
   s_speed tmp = *cells;
@@ -301,6 +288,144 @@ decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* 
   return av_vel;
 
 }
+
+
+int collate_data(const t_param params, const s_speed* cells, m_info rank_info){
+
+  if (rank_info.rank != 0){
+    for (int kk = 0; kk < NSPEEDS; kk++){
+
+      MPI_Send( &cells->speeds[kk][rank_info.start] , 
+                rank_info.end - rank_info.start, 
+                MPI_FLOAT , 
+                0 , 
+                kk , 
+                MPI_COMM_WORLD);
+
+    }
+  }
+
+  else{
+    for (int src = 1; src < rank_info.size; src++){
+
+      m_info src_info;
+      compute_rank_info(src, rank_info.size, &src_info, params);
+
+      for (int kk = 0; kk < NSPEEDS; kk++){
+
+        MPI_Recv( &cells->speeds[kk][src_info.start] , 
+                  src_info.end - src_info.start , 
+                  MPI_FLOAT , 
+                  src , 
+                  kk , 
+                  MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+      }
+  }
+  }
+
+  return 0;
+
+}
+
+
+
+int compute_rank_info(int rank, int size, m_info* rank_info, t_param params){
+
+  // printf("Hello, I'm rank %d out of %d \n", rank, size);
+  rank_info->rank = rank;
+  rank_info->size = size;
+
+  rank_info->row_work = params.ny / size;
+  rank_info->row_start = rank * rank_info->row_work;
+  rank_info->row_end = rank_info->row_start + rank_info->row_work;
+
+  rank_info->remainder = params.ny % size;
+
+  if (rank_info->remainder != 0){
+    if (rank < rank_info->remainder) {
+      rank_info->row_start += rank_info->rank;
+      rank_info->row_end = rank_info->row_start + rank_info->row_work + 1;
+    }
+    else {
+      rank_info->row_start += rank_info->remainder;
+      rank_info->row_end = rank_info->row_start + rank_info->row_work;
+    }
+  }
+
+  rank_info->down_rank = (rank == 0) ? MPI_PROC_NULL: rank - 1;
+  rank_info->up_rank = (rank == size-1) ? MPI_PROC_NULL: rank + 1;
+
+  rank_info->start = params.nx * rank_info->row_start;
+  rank_info->end = params.nx * rank_info->row_end;
+
+
+  return 0;
+}
+
+
+
+int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cells, m_info rank_info){
+  // MPI_ANY_TAG = 123;
+
+  // if (rank_info.rank % 2 == 0){   // Send up and receive from down
+    for (int kk = 0; kk < NSPEEDS; kk++){
+
+      MPI_Sendrecv( &cells->speeds[kk][(rank_info.row_end-1)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.up_rank , 
+                    kk , 
+                    &cells->speeds[kk][(rank_info.row_start-1)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.down_rank , 
+                    kk , 
+                    MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+      MPI_Sendrecv( &tmp_cells->speeds[kk][(rank_info.row_end-1)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.up_rank , 
+                    kk , 
+                    &tmp_cells->speeds[kk][(rank_info.row_start-1)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.down_rank , 
+                    kk , 
+                    MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+    }
+
+  // } else{   // Send down and receive from up
+    for (int kk = 0; kk < NSPEEDS; kk++){
+
+      MPI_Sendrecv( &cells->speeds[kk][(rank_info.row_start)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.down_rank , 
+                    kk , 
+                    &cells->speeds[kk][(rank_info.row_end)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.up_rank , 
+                    kk , 
+                    MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+      MPI_Sendrecv( &tmp_cells->speeds[kk][(rank_info.row_start)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.down_rank , 
+                    kk , 
+                    &tmp_cells->speeds[kk][(rank_info.row_end)*params.nx] , 
+                    params.nx , 
+                    MPI_FLOAT , 
+                    rank_info.up_rank , 
+                    kk , 
+                    MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+    }
+  // }
+
+  return EXIT_SUCCESS;
+
+}
+
 
 
 
@@ -354,7 +479,7 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
 
 
 
-decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info* mpi_info)
+decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info rank_info)
 {
 
   #ifdef ICC
@@ -387,7 +512,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
 
 
   /* Fused Loop */
-  for (int jj = mpi_info->row_start; jj < mpi_info->row_end; jj++)
+  for (int jj = rank_info.row_start; jj < rank_info.row_end; jj++)
   {
     #pragma simd
     for (int ii = 0; ii < params.nx; ii++)     
@@ -419,6 +544,8 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
       tmp_speeds[7] = cells->speeds[7][x_e + y_n*params.nx]; /* south-west */
       tmp_speeds[8] = cells->speeds[8][x_w + y_n*params.nx]; /* south-east */
 
+      
+      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[0], tmp_speeds[4], tmp_speeds[8]);
 
 
       const int id = ii + jj*params.nx;
@@ -455,6 +582,16 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
         decimal local_density = tmp_speeds[0] + tmp_speeds[1] + tmp_speeds[2] + tmp_speeds[3]
                           + tmp_speeds[4] + tmp_speeds[5] + tmp_speeds[6] + tmp_speeds[7] + tmp_speeds[8];
 
+      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[1], tmp_speeds[5], tmp_speeds[8]);
+      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[3], tmp_speeds[6], tmp_speeds[7]);
+
+      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[2], tmp_speeds[5], tmp_speeds[6]);
+      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[4], tmp_speeds[7], tmp_speeds[8]);
+
+
+      printf("\nTMP SPEEDS: %d %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", rank_info.rank, tmp_speeds[0], tmp_speeds[1], tmp_speeds[2], tmp_speeds[3], tmp_speeds[4], tmp_speeds[5], tmp_speeds[6], tmp_speeds[7], tmp_speeds[8]);
+
+
         /* compute x velocity component */
         decimal u_x = (tmp_speeds[1]
                       + tmp_speeds[5]
@@ -474,6 +611,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
 
         /* velocity squared */
         decimal u_sq = u_x * u_x + u_y * u_y;
+        printf("\nUsquared: %d %lf %lf %lf\n", rank_info.rank, u_sq, u_x, u_y);
 
         /* directional velocity components */
         decimal u[NSPEEDS];
