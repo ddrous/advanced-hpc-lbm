@@ -115,7 +115,6 @@ int initialise(const char* paramfile, const char* obstaclefile,
 */
 decimal timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles, m_info rank_info);
 
-
 int compute_rank_info(int rank, int size, m_info* rank_info, t_param params);
 
 int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cells, m_info rank_info);
@@ -124,10 +123,10 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
 // int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
 // int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
 // int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-
 decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info);      // Fusion step !!
 
 int collate_data(const t_param params, const s_speed* cells, m_info rank_info);
+int collate_vels(const t_param params, decimal* av_vels, m_info rank_info, int nb_unoc_cells);
 
 int write_values(const t_param params, s_speed* cells, int* obstacles, decimal* av_vels);
 
@@ -138,6 +137,9 @@ int finalise(const t_param* params, s_speed* cells_ptr, s_speed* tmp_cells_ptr,
 /* Sum all the densities in the grid.
 ** The total should remain constant from one timestep to the next. */
 decimal total_density(const t_param params, const s_speed* restrict cells);
+
+/* compute number of unoccupied cells */
+int nb_unoccupied_cells(const t_param params, s_speed* cells, int* obstacles);
 
 /* compute average velocity */
 decimal av_velocity(const t_param params, s_speed* cells, int* obstacles);
@@ -203,12 +205,19 @@ int main(int argc, char* argv[])
 
   compute_rank_info(rank, size, &rank_info, params);
 
-  printf("Rank %d TotalRank %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
+  // printf("Rank %d TotalRank %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
 
 
   for (int tt = 0; tt < params.maxIters; tt++)
   {
-    timestep(params, &cells, &tmp_cells, obstacles, rank_info);    // HERE !!!
+    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles, rank_info);    // HERE !!!
+
+    // #ifdef DEBUG
+    //     printf("== LOCAL DATA \n Timestep : %d==\n", tt);
+    //     printf("av velocity: %.12E\n", av_vels[tt]);
+    //     printf("tot density: %.12E\n", total_density(params, &cells));
+    // #endif
+
   }
   
   /* Compute time stops here, collate time starts*/
@@ -218,14 +227,14 @@ int main(int argc, char* argv[])
 
 
   // Collate data from ranks here 
-
   collate_data(params, &cells, rank_info);
+
+  int tot_cells = nb_unoccupied_cells(params, &cells, obstacles);
+  collate_vels(params, av_vels, rank_info, tot_cells);
 
   if (rank==0){
     for (int tt = 0; tt < params.maxIters; tt++)
     {
-      av_vels[tt] = av_velocity(params, &cells, obstacles);
-
       #ifdef DEBUG
           printf("== AFTER COLLATE : %d==\n", tt);
           printf("av velocity: %.12E\n", av_vels[tt]);
@@ -268,9 +277,8 @@ decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* 
 
   exchange_halos(params, cells, tmp_cells, rank_info);
 
-  // if (rank_info.rank == 0)
+  // if (rank_info.rank == rank_info.size-1)      // TODO identify who should handle row = ny-1 
     accelerate_flow(params, cells, obstacles);
-
 
   decimal av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, rank_info);
 
@@ -327,6 +335,47 @@ int collate_data(const t_param params, const s_speed* cells, m_info rank_info){
 
 
 
+int collate_vels(const t_param params, decimal* av_vels, m_info rank_info, int nb_unoc_cells){
+
+  if (rank_info.rank != 0){
+    MPI_Send( av_vels , 
+              params.maxIters, 
+              MPI_FLOAT , 
+              0 , 
+              123 , 
+              MPI_COMM_WORLD);
+  }
+
+  else{
+
+    decimal* new_av_vels = (decimal*)malloc(sizeof(decimal) * params.maxIters);   // TODO Carefull of deadlock here
+    
+    for (int src = 1; src < rank_info.size; src++){
+        MPI_Recv( new_av_vels , 
+                  params.maxIters , 
+                  MPI_FLOAT , 
+                  src , 
+                  123 , 
+                  MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+
+        for (int tt = 0; tt < params.maxIters; tt++)
+          av_vels[tt] += new_av_vels[tt];
+    }
+    free(new_av_vels);
+    new_av_vels = NULL;
+
+    for (int tt = 0; tt < params.maxIters; tt++)
+      av_vels[tt] /= nb_unoc_cells;
+
+  }
+
+  return 0;
+
+}
+
+
+
+
 int compute_rank_info(int rank, int size, m_info* rank_info, t_param params){
 
   // printf("Hello, I'm rank %d out of %d \n", rank, size);
@@ -363,9 +412,8 @@ int compute_rank_info(int rank, int size, m_info* rank_info, t_param params){
 
 
 int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cells, m_info rank_info){
-  // MPI_ANY_TAG = 123;
 
-  // if (rank_info.rank % 2 == 0){   // Send up and receive from down
+  // Send up and receive from down
     for (int kk = 0; kk < NSPEEDS; kk++){
 
       MPI_Sendrecv( &cells->speeds[kk][(rank_info.row_end-1)*params.nx] , 
@@ -379,20 +427,20 @@ int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cell
                     rank_info.down_rank , 
                     kk , 
                     MPI_COMM_WORLD , MPI_STATUS_IGNORE);
-      MPI_Sendrecv( &tmp_cells->speeds[kk][(rank_info.row_end-1)*params.nx] , 
-                    params.nx , 
-                    MPI_FLOAT , 
-                    rank_info.up_rank , 
-                    kk+NSPEEDS , 
-                    &tmp_cells->speeds[kk][(rank_info.row_start-1)*params.nx] , 
-                    params.nx , 
-                    MPI_FLOAT , 
-                    rank_info.down_rank , 
-                    kk+NSPEEDS , 
-                    MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+      // MPI_Sendrecv( &tmp_cells->speeds[kk][(rank_info.row_end-1)*params.nx] , 
+      //               params.nx , 
+      //               MPI_FLOAT , 
+      //               rank_info.up_rank , 
+      //               kk+NSPEEDS , 
+      //               &tmp_cells->speeds[kk][(rank_info.row_start-1)*params.nx] , 
+      //               params.nx , 
+      //               MPI_FLOAT , 
+      //               rank_info.down_rank , 
+      //               kk+NSPEEDS , 
+      //               MPI_COMM_WORLD , MPI_STATUS_IGNORE);
     }
 
-  // } else{   // Send down and receive from up
+    // Send down and receive from up
     for (int kk = 0; kk < NSPEEDS; kk++){
 
       MPI_Sendrecv( &cells->speeds[kk][(rank_info.row_start)*params.nx] , 
@@ -406,22 +454,20 @@ int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cell
                     rank_info.up_rank , 
                     kk , 
                     MPI_COMM_WORLD , MPI_STATUS_IGNORE);
-      MPI_Sendrecv( &tmp_cells->speeds[kk][(rank_info.row_start)*params.nx] , 
-                    params.nx , 
-                    MPI_FLOAT , 
-                    rank_info.down_rank , 
-                    kk+NSPEEDS , 
-                    &tmp_cells->speeds[kk][(rank_info.row_end)*params.nx] , 
-                    params.nx , 
-                    MPI_FLOAT , 
-                    rank_info.up_rank , 
-                    kk+NSPEEDS , 
-                    MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+      // MPI_Sendrecv( &tmp_cells->speeds[kk][(rank_info.row_start)*params.nx] , 
+      //               params.nx , 
+      //               MPI_FLOAT , 
+      //               rank_info.down_rank , 
+      //               kk+NSPEEDS , 
+      //               &tmp_cells->speeds[kk][(rank_info.row_end)*params.nx] , 
+      //               params.nx , 
+      //               MPI_FLOAT , 
+      //               rank_info.up_rank , 
+      //               kk+NSPEEDS , 
+      //               MPI_COMM_WORLD , MPI_STATUS_IGNORE);
     }
-  // }
 
-  return EXIT_SUCCESS;
-
+  return 0;
 }
 
 
@@ -468,7 +514,6 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
       cells->speeds[6][id] = cond ? cells->speeds[6][id]- w2: cells->speeds[6][id];
       cells->speeds[7][id] = cond ? cells->speeds[7][id]- w2: cells->speeds[7][id];
 
-
   }
 
   return EXIT_SUCCESS;
@@ -502,7 +547,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
   // const decimal val2 = 2.f * c_sq;
 
 
-  int    tot_cells = 0;  /* no. of cells used in calculation */
+  // int tot_cells = 0;  /* no. of cells used in calculation */
   decimal tot_u;          /* accumulated magnitudes of velocity for each cell */
 
   /* initialise */
@@ -542,9 +587,6 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
       tmp_speeds[7] = cells->speeds[7][x_e + y_n*params.nx]; /* south-west */
       tmp_speeds[8] = cells->speeds[8][x_w + y_n*params.nx]; /* south-east */
 
-      
-      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[0], tmp_speeds[4], tmp_speeds[8]);
-
 
       const int id = ii + jj*params.nx;
 
@@ -569,26 +611,9 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
       // if (!obstacles[id])
       else
       {
-        /* compute local density total */
-        // const int cond2 = !obstacles[id];
 
-        // decimal local_density = 0.f;
-        // for (int kk = 0; kk < NSPEEDS; kk++)
-        // {
-        //   local_density += tmp_speeds[kk];
-        // }
         decimal local_density = tmp_speeds[0] + tmp_speeds[1] + tmp_speeds[2] + tmp_speeds[3]
                           + tmp_speeds[4] + tmp_speeds[5] + tmp_speeds[6] + tmp_speeds[7] + tmp_speeds[8];
-
-      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[1], tmp_speeds[5], tmp_speeds[8]);
-      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[3], tmp_speeds[6], tmp_speeds[7]);
-
-      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[2], tmp_speeds[5], tmp_speeds[6]);
-      // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[4], tmp_speeds[7], tmp_speeds[8]);
-
-
-      // printf("\nTMP SPEEDS: %d %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", rank_info.rank, tmp_speeds[0], tmp_speeds[1], tmp_speeds[2], tmp_speeds[3], tmp_speeds[4], tmp_speeds[5], tmp_speeds[6], tmp_speeds[7], tmp_speeds[8]);
-
 
         /* compute x velocity component */
         decimal u_x = (tmp_speeds[1]
@@ -609,7 +634,6 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
 
         /* velocity squared */
         decimal u_sq = u_x * u_x + u_y * u_y;
-        // printf("\nUsquared: %d %lf %lf %lf\n", rank_info.rank, u_sq, u_x, u_y);
 
         /* directional velocity components */
         decimal u[NSPEEDS];
@@ -676,20 +700,41 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
         // // // // AVERAGE VELOCITY
         tot_u += sqrtf(u_sq);
         /* increase counter of inspected cells */
-        ++tot_cells;
+        // ++tot_cells;
 
       }
 
     }
   }
 
-  return tot_u / (decimal)tot_cells;
+  // return tot_u / (decimal)tot_cells;
+  return tot_u;    // NOTE: carefull here: this is MPI local and unweighted
 
 
 }
 
 
 
+
+
+
+int nb_unoccupied_cells(const t_param params, s_speed* cells, int* obstacles)
+{
+  int tot_cells = 0;  /* no. of cells used in calculation */
+
+  /* loop over all non-blocked cells */     // TODO vectorise this !
+  for (int jj = 0; jj < params.ny; jj++)
+  {
+    for (int ii = 0; ii < params.nx; ii++)
+    {
+      /* ignore occupied cells */
+      if (!obstacles[ii + jj*params.nx])
+        ++tot_cells;
+    }
+  }
+
+  return tot_cells;
+}
 
 
 
