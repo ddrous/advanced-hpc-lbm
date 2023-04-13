@@ -144,3 +144,6 @@ You can view the final state of the simulation by creating a .png image file usi
     ./d2q9-bgk input_128x128.params obstacles_128x128.dat OR ./d2q9-bgk input_256x256.params obstacles_256x256.dat
     gprof ./d2q9-bgk gmon.out > profile.txt
     less profile.txt
+
+# Check Resources
+    - for memory: `sstat 11346591 --fields=MaxRSS%5`
