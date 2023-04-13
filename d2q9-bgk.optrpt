@@ -51,8 +51,8 @@ INLINE REPORT: (main(int, char **)) [1/19=5.3%] d2q9-bgk.c(161,1)
       -> EXTERN: (466,7) MPI_Sendrecv(const void *, int, MPI_Datatype, int, int, void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
     -> (285,5) accelerate_flow(const t_param, const s_speed *__restrict__, const int *) (isz = 231) (sz = 242)
        [[ Inlining would exceed -inline-max-size value (242>230) <1>]]
-    -> (287,20) pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *, m_info, int) (isz = 463) (sz = 480)
-       [[ Inlining would exceed -inline-max-size value (480>230) <1>]]
+    -> (287,20) pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *, m_info, int) (isz = 460) (sz = 477)
+       [[ Inlining would exceed -inline-max-size value (477>230) <1>]]
   -> EXTERN: (228,3) gettimeofday(struct timeval *__restrict__, __timezone_ptr_t)
   -> INLINE: (234,3) collate_data(const t_param, const s_speed *, m_info) (isz = 137) (sz = 148)
     -> EXTERN: (304,7) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
@@ -304,263 +304,133 @@ remark #16201: OpenMP DEFINED REGION WAS PARALLELIZED
     Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
 
 
-LOOP BEGIN at d2q9-bgk.c(577,5)
-   remark #25084: Preprocess Loopnests: Moving Out Store    [ d2q9-bgk.c(693,7) ]
-   remark #25261: Invariant Condition eliminated(Proven True) at line 587
-   remark #15542: loop was not vectorized: inner loop was already vectorized
+LOOP BEGIN at d2q9-bgk.c(573,3)
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[0][ii+jj*U6_V]>, part of index is nonlinearly computed   [ d2q9-bgk.c(592,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[1][x_w+jj*U6_V]>, part of index is conditional   [ d2q9-bgk.c(593,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[2][ii+y_s*U6_V]>, part of index is conditional   [ d2q9-bgk.c(594,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[3][x_e+jj*U6_V]>, part of index is nonlinearly computed   [ d2q9-bgk.c(595,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[4][ii+y_n*U6_V]>, part of index is nonlinearly computed   [ d2q9-bgk.c(596,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[5][x_w+y_s*U6_V]>, part of index is conditional   [ d2q9-bgk.c(597,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[6][x_e+y_s*U6_V]>, part of index is conditional   [ d2q9-bgk.c(598,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[7][x_e+y_n*U6_V]>, part of index is nonlinearly computed   [ d2q9-bgk.c(599,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[8][x_w+y_n*U6_V]>, part of index is conditional   [ d2q9-bgk.c(600,23) ]
+   remark #15328: vectorization support: irregularly indexed load was emulated for the variable <obstacles[id]>, part of index is nonlinearly computed   [ d2q9-bgk.c(605,11) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[1][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(610,9) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[2][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(611,9) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[3][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(612,9) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[4][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(613,9) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[5][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(614,9) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[6][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(615,9) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[7][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(616,9) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[8][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(617,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (652:9)>, masked, stride is 4   [ d2q9-bgk.c(652,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (653:9)>, masked, stride is 4   [ d2q9-bgk.c(653,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (654:9)>, masked, stride is 4   [ d2q9-bgk.c(654,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (655:9)>, masked, stride is 4   [ d2q9-bgk.c(655,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (656:9)>, masked, stride is 4   [ d2q9-bgk.c(656,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (657:9)>, masked, stride is 4   [ d2q9-bgk.c(657,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (658:9)>, masked, stride is 4   [ d2q9-bgk.c(658,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (659:9)>, masked, stride is 4   [ d2q9-bgk.c(659,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (665:9)>, masked, stride is 4   [ d2q9-bgk.c(665,9) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15329: vectorization support: irregularly indexed store was emulated for the variable <tmp_cells->speeds[kk][id]>, masked, part of index is nonlinearly computed   [ d2q9-bgk.c(682,11) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
+   remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
+   remark #15305: vectorization support: vector length 4
+   remark #15309: vectorization support: normalized vectorization overhead 0.106
+   remark #26012: vectorization support: data layout of a private variable tmp_speeds was optimized, converted to SoA
+   remark #26012: vectorization support: data layout of a private variable u was optimized, converted to SoA
+   remark #26012: vectorization support: data layout of a private variable d_equ was optimized, converted to SoA
+   remark #15355: vectorization support: at (688:9) is float type reduction   [ d2q9-bgk.c(688,9) ]
+   remark #15301: SIMD LOOP WAS VECTORIZED
+   remark #15451: unmasked unaligned unit stride stores: 26 
+   remark #15459: masked indexed (or scatter) stores: 17 
+   remark #15460: masked strided loads: 68 
+   remark #15462: unmasked indexed (or gather) loads: 10 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 1022 
+   remark #15477: vector cost: 967.750 
+   remark #15478: estimated potential speedup: 1.050 
+   remark #15482: vectorized math library calls: 4 
+   remark #15486: divides: 2 
+   remark #15487: type converts: 2 
+   remark #15488: --- end vector cost summary ---
 
-   LOOP BEGIN at d2q9-bgk.c(577,5)
-   <Predicate Optimized v1>
-      remark #25422: Invariant Condition at line 586 hoisted out of this loop
-      remark #15389: vectorization support: reference cells->speeds[0][ii+jj*?] has unaligned access   [ d2q9-bgk.c(592,23) ]
-      remark #15389: vectorization support: reference cells->speeds[1][x_w+jj*?] has unaligned access   [ d2q9-bgk.c(593,23) ]
-      remark #15389: vectorization support: reference cells->speeds[2][ii+y_s*?] has unaligned access   [ d2q9-bgk.c(594,23) ]
-      remark #15389: vectorization support: reference cells->speeds[4][ii+y_n*?] has unaligned access   [ d2q9-bgk.c(596,23) ]
-      remark #15389: vectorization support: reference cells->speeds[5][x_w+y_s*?] has unaligned access   [ d2q9-bgk.c(597,23) ]
-      remark #15389: vectorization support: reference cells->speeds[8][x_w+y_n*?] has unaligned access   [ d2q9-bgk.c(600,23) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[1][id] has unaligned access   [ d2q9-bgk.c(610,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[2][id] has unaligned access   [ d2q9-bgk.c(611,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[3][id] has unaligned access   [ d2q9-bgk.c(612,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[4][id] has unaligned access   [ d2q9-bgk.c(613,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[5][id] has unaligned access   [ d2q9-bgk.c(614,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[6][id] has unaligned access   [ d2q9-bgk.c(615,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[7][id] has unaligned access   [ d2q9-bgk.c(616,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[8][id] has unaligned access   [ d2q9-bgk.c(617,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15381: vectorization support: unaligned access used inside loop body
-      remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[3][x_e+jj*?]>, part of index is nonlinearly computed   [ d2q9-bgk.c(595,23) ]
-      remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[6][x_e+y_s*?]>, part of index is nonlinearly computed   [ d2q9-bgk.c(598,23) ]
-      remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[7][x_e+y_n*?]>, part of index is nonlinearly computed   [ d2q9-bgk.c(599,23) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (652:9)>, masked, stride is 4   [ d2q9-bgk.c(652,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (653:9)>, masked, stride is 4   [ d2q9-bgk.c(653,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (654:9)>, masked, stride is 4   [ d2q9-bgk.c(654,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (655:9)>, masked, stride is 4   [ d2q9-bgk.c(655,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (656:9)>, masked, stride is 4   [ d2q9-bgk.c(656,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (657:9)>, masked, stride is 4   [ d2q9-bgk.c(657,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (658:9)>, masked, stride is 4   [ d2q9-bgk.c(658,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (659:9)>, masked, stride is 4   [ d2q9-bgk.c(659,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (665:9)>, masked, stride is 4   [ d2q9-bgk.c(665,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15305: vectorization support: vector length 4
-      remark #15309: vectorization support: normalized vectorization overhead 0.144
-      remark #26012: vectorization support: data layout of a private variable tmp_speeds was optimized, converted to SoA
-      remark #26012: vectorization support: data layout of a private variable u was optimized, converted to SoA
-      remark #26012: vectorization support: data layout of a private variable d_equ was optimized, converted to SoA
-      remark #15355: vectorization support: tot_u_tmp is float type reduction   [ d2q9-bgk.c(575,23) ]
-      remark #15301: SIMD LOOP WAS VECTORIZED
-      remark #15450: unmasked unaligned unit stride loads: 7 
-      remark #15451: unmasked unaligned unit stride stores: 26 
-      remark #15457: masked unaligned unit stride stores: 17 
-      remark #15460: masked strided loads: 68 
-      remark #15462: unmasked indexed (or gather) loads: 3 
-      remark #15475: --- begin vector cost summary ---
-      remark #15476: scalar cost: 922 
-      remark #15477: vector cost: 596.000 
-      remark #15478: estimated potential speedup: 1.540 
-      remark #15482: vectorized math library calls: 1 
-      remark #15486: divides: 2 
-      remark #15488: --- end vector cost summary ---
-
-      LOOP BEGIN at d2q9-bgk.c(669,9)
-         remark #25436: completely unrolled by 4   (pre-vector) 
-      LOOP END
-
-      LOOP BEGIN at d2q9-bgk.c(680,9)
-         remark #25436: completely unrolled by 9   (pre-vector) 
-      LOOP END
+   LOOP BEGIN at d2q9-bgk.c(669,9)
+      remark #25436: completely unrolled by 4   (pre-vector) 
    LOOP END
 
-   LOOP BEGIN at d2q9-bgk.c(577,5)
-   <Remainder loop for vectorization, Predicate Optimized v1>
+   LOOP BEGIN at d2q9-bgk.c(680,9)
+      remark #25436: completely unrolled by 9   (pre-vector) 
    LOOP END
+LOOP END
 
-   LOOP BEGIN at d2q9-bgk.c(577,5)
-   <Predicate Optimized v2>
-      remark #15389: vectorization support: reference cells->speeds[0][ii+jj*?] has unaligned access   [ d2q9-bgk.c(592,23) ]
-      remark #15389: vectorization support: reference cells->speeds[1][x_w+jj*?] has unaligned access   [ d2q9-bgk.c(593,23) ]
-      remark #15389: vectorization support: reference cells->speeds[2][ii+y_s*?] has unaligned access   [ d2q9-bgk.c(594,23) ]
-      remark #15389: vectorization support: reference cells->speeds[4][ii+y_n*?] has unaligned access   [ d2q9-bgk.c(596,23) ]
-      remark #15389: vectorization support: reference cells->speeds[5][x_w+y_s*?] has unaligned access   [ d2q9-bgk.c(597,23) ]
-      remark #15389: vectorization support: reference cells->speeds[8][x_w+y_n*?] has unaligned access   [ d2q9-bgk.c(600,23) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[1][id] has unaligned access   [ d2q9-bgk.c(610,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[2][id] has unaligned access   [ d2q9-bgk.c(611,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[3][id] has unaligned access   [ d2q9-bgk.c(612,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[4][id] has unaligned access   [ d2q9-bgk.c(613,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[5][id] has unaligned access   [ d2q9-bgk.c(614,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[6][id] has unaligned access   [ d2q9-bgk.c(615,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[7][id] has unaligned access   [ d2q9-bgk.c(616,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[8][id] has unaligned access   [ d2q9-bgk.c(617,9) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15389: vectorization support: reference tmp_cells->speeds[kk][id] has unaligned access   [ d2q9-bgk.c(682,11) ]
-      remark #15381: vectorization support: unaligned access used inside loop body
-      remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[3][x_e+jj*?]>, part of index is nonlinearly computed   [ d2q9-bgk.c(595,23) ]
-      remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[6][x_e+y_s*?]>, part of index is nonlinearly computed   [ d2q9-bgk.c(598,23) ]
-      remark #15328: vectorization support: irregularly indexed load was emulated for the variable <cells->speeds[7][x_e+y_n*?]>, part of index is nonlinearly computed   [ d2q9-bgk.c(599,23) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (652:9)>, masked, stride is 4   [ d2q9-bgk.c(652,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (653:9)>, masked, stride is 4   [ d2q9-bgk.c(653,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (654:9)>, masked, stride is 4   [ d2q9-bgk.c(654,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (655:9)>, masked, stride is 4   [ d2q9-bgk.c(655,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (656:9)>, masked, stride is 4   [ d2q9-bgk.c(656,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (657:9)>, masked, stride is 4   [ d2q9-bgk.c(657,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (658:9)>, masked, stride is 4   [ d2q9-bgk.c(658,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (659:9)>, masked, stride is 4   [ d2q9-bgk.c(659,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (665:9)>, masked, stride is 4   [ d2q9-bgk.c(665,9) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:52)>, masked, stride is 4   [ d2q9-bgk.c(671,52) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:46)>, masked, stride is 4   [ d2q9-bgk.c(672,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (672:54)>, masked, stride is 4   [ d2q9-bgk.c(672,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (671:11)>, masked, stride is 4   [ d2q9-bgk.c(671,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:54)>, masked, stride is 4   [ d2q9-bgk.c(674,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:46)>, masked, stride is 4   [ d2q9-bgk.c(675,46) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (675:56)>, masked, stride is 4   [ d2q9-bgk.c(675,56) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (674:11)>, masked, stride is 4   [ d2q9-bgk.c(674,11) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (682:39)>, masked, stride is 4   [ d2q9-bgk.c(682,39) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:54)>, masked, stride is 4   [ d2q9-bgk.c(684,54) ]
-      remark #15328: vectorization support: non-unit strided load was emulated for the variable <at (684:66)>, masked, stride is 4   [ d2q9-bgk.c(684,66) ]
-      remark #15305: vectorization support: vector length 4
-      remark #15309: vectorization support: normalized vectorization overhead 0.144
-      remark #26012: vectorization support: data layout of a private variable tmp_speeds was optimized, converted to SoA
-      remark #26012: vectorization support: data layout of a private variable u was optimized, converted to SoA
-      remark #26012: vectorization support: data layout of a private variable d_equ was optimized, converted to SoA
-      remark #15355: vectorization support: tot_u_tmp is float type reduction   [ d2q9-bgk.c(575,23) ]
-      remark #15301: SIMD LOOP WAS VECTORIZED
-      remark #15450: unmasked unaligned unit stride loads: 7 
-      remark #15451: unmasked unaligned unit stride stores: 26 
-      remark #15457: masked unaligned unit stride stores: 17 
-      remark #15460: masked strided loads: 68 
-      remark #15462: unmasked indexed (or gather) loads: 3 
-      remark #15475: --- begin vector cost summary ---
-      remark #15476: scalar cost: 922 
-      remark #15477: vector cost: 596.000 
-      remark #15478: estimated potential speedup: 1.540 
-      remark #15482: vectorized math library calls: 1 
-      remark #15486: divides: 2 
-      remark #15488: --- end vector cost summary ---
-   LOOP END
-
-   LOOP BEGIN at d2q9-bgk.c(577,5)
-   <Remainder loop for vectorization, Predicate Optimized v2>
-   LOOP END
+LOOP BEGIN at d2q9-bgk.c(573,3)
+<Remainder loop for vectorization>
 LOOP END
 
     Report from: Code generation optimizations [cg]
@@ -571,22 +441,22 @@ d2q9-bgk.c(545,1):remark #34051: REGISTER ALLOCATION : [pro_re_col_av] d2q9-bgk.
         Reserved     :    2[ rsp rip]
         Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
         Callee-save  :    6[ rbx rbp r12-r15]
-        Assigned     :   30[ rax rdx rcx rbx rsi rdi r8-r15 zmm0-zmm15]
+        Assigned     :   31[ rax rdx rcx rbx rbp rsi rdi r8-r15 zmm0-zmm15]
         
     Routine temporaries
-        Total         :    3094
-            Global    :    1029
-            Local     :    2065
-        Regenerable   :     122
-        Spilled       :     146
+        Total         :    1944
+            Global    :     559
+            Local     :    1385
+        Regenerable   :     115
+        Spilled       :      67
         
     Routine stack
-        Variables     :     968 bytes*
-            Reads     :     551 [8.75e+00 ~ 8.7%]
-            Writes    :      69 [1.36e+00 ~ 1.4%]
-        Spills        :    1312 bytes*
-            Reads     :     379 [5.18e+00 ~ 5.2%]
-            Writes    :     186 [1.34e+00 ~ 1.3%]
+        Variables     :     544 bytes*
+            Reads     :     279 [7.08e+00 ~ 7.1%]
+            Writes    :      44 [1.19e+00 ~ 1.2%]
+        Spills        :     744 bytes*
+            Reads     :     161 [5.37e+00 ~ 5.4%]
+            Writes    :      98 [3.10e+00 ~ 3.1%]
     
     Notes
     
@@ -703,8 +573,8 @@ INLINE REPORT: (timestep(const t_param, s_speed *, s_speed *, int *, m_info, int
     -> EXTERN: (466,7) MPI_Sendrecv(const void *, int, MPI_Datatype, int, int, void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
   -> (285,5) accelerate_flow(const t_param, const s_speed *__restrict__, const int *) (isz = 231) (sz = 242)
      [[ Inlining would exceed -inline-max-size value (242>230) <1>]]
-  -> (287,20) pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *, m_info, int) (isz = 463) (sz = 480)
-     [[ Inlining would exceed -inline-max-size value (480>230) <1>]]
+  -> (287,20) pro_re_col_av(const t_param, const s_speed *, s_speed *, const int *, m_info, int) (isz = 460) (sz = 477)
+     [[ Inlining would exceed -inline-max-size value (477>230) <1>]]
 
 
     Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]

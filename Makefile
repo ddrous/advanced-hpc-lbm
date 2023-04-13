@@ -2,11 +2,11 @@
 
 EXE=d2q9-bgk
 
-CC=mpiicc
-CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native -fopenmp
+# CC=mpiicc
+# CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native -fopenmp
 
-# CC=mpicc
-# CFLAGS= -std=c99 -Wall -Ofast -mtune=native
+CC=mpicc
+CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fopenmp -fno-tree-vectorize
 
 
 FINAL_STATE_FILE=./final_state.dat

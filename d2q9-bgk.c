@@ -63,7 +63,7 @@
 #define FINALSTATEFILE  "final_state.dat"
 #define AVVELSFILE      "av_vels.dat"
 
-#define ICC
+// #define ICC
 // #define DEBUG
 
 
@@ -569,6 +569,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
 
   /* Fused Loop */
   #pragma vector aligned
+  // #pragma omp simd
   #pragma omp parallel for collapse(1) reduction(+:tot_u)
   for (int jj = rank_info.row_start; jj < rank_info.row_end; jj++)
   {
@@ -665,7 +666,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
         d_equ[0] = w0_ * local_density
                    * (1.f - u_sq / (2.f * c_sq));
 
-        #pragma omp simd
+        // #pragma omp simd
         for (int kk = 1; kk < 5; kk++)
         {
           d_equ[kk] = w1_ * local_density * (1.f + u[kk] / c_sq
@@ -676,7 +677,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
                                           - u_sq / val2);
         }
 
-        #pragma omp simd
+        // #pragma omp simd
         for (int kk = 0; kk < NSPEEDS; kk++)
         {
           tmp_cells->speeds[kk][id] = tmp_speeds[kk]
