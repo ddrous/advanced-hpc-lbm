@@ -64,7 +64,7 @@
 #define AVVELSFILE      "av_vels.dat"
 
 // #define ICC
-#define DEBUG
+// #define DEBUG
 
 
 typedef float decimal;        // To switch between double and decimals
@@ -208,15 +208,7 @@ int main(int argc, char* argv[])
 
   for (int tt = 0; tt < params.maxIters; tt++)
   {
-    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles, rank_info);    // HERE !!!
-    // av_vels[tt] = av_velocity(params, &cells, obstacles);
-
-    #ifdef DEBUG
-        printf("==timestep: %d==\n", tt);
-        printf("av velocity: %.12E\n", av_vels[tt]);
-        printf("tot density: %.12E\n", total_density(params, &cells));
-    #endif
-
+    timestep(params, &cells, &tmp_cells, obstacles, rank_info);    // HERE !!!
   }
   
   /* Compute time stops here, collate time starts*/
@@ -226,18 +218,21 @@ int main(int argc, char* argv[])
 
 
   // Collate data from ranks here 
+
   collate_data(params, &cells, rank_info);
 
-  // for (int tt = 0; tt < params.maxIters; tt++)
-  // {
-  //   av_vels[tt] = av_velocity(params, &cells, obstacles);
+  if (rank==0){
+    for (int tt = 0; tt < params.maxIters; tt++)
+    {
+      av_vels[tt] = av_velocity(params, &cells, obstacles);
 
-  //   #ifdef DEBUG
-  //       printf("== AFTER COLLATE : %d==\n", tt);
-  //       printf("av velocity: %.12E\n", av_vels[tt]);
-  //       printf("tot density: %.12E\n", total_density(params, &cells));
-  //   #endif
-  // }
+      #ifdef DEBUG
+          printf("== AFTER COLLATE : %d==\n", tt);
+          printf("av velocity: %.12E\n", av_vels[tt]);
+          printf("tot density: %.12E\n", total_density(params, &cells));
+      #endif
+    }
+  }
 
   /* Total/collate time stops here.*/
   gettimeofday(&timstr, NULL);
@@ -273,8 +268,9 @@ decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* 
 
   exchange_halos(params, cells, tmp_cells, rank_info);
 
-  if (rank_info.rank == 0)
+  // if (rank_info.rank == 0)
     accelerate_flow(params, cells, obstacles);
+
 
   decimal av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, rank_info);
 
@@ -311,7 +307,9 @@ int collate_data(const t_param params, const s_speed* cells, m_info rank_info){
       m_info src_info;
       compute_rank_info(src, rank_info.size, &src_info, params);
 
-      for (int kk = 0; kk < NSPEEDS; kk++){
+      // printf("\nsrc rank info %d %d %d\n", src_info.rank, src_info.start, src_info.end);
+
+      for (int kk = 0; kk < NSPEEDS; kk++){        
 
         MPI_Recv( &cells->speeds[kk][src_info.start] , 
                   src_info.end - src_info.start , 
@@ -385,12 +383,12 @@ int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cell
                     params.nx , 
                     MPI_FLOAT , 
                     rank_info.up_rank , 
-                    kk , 
+                    kk+NSPEEDS , 
                     &tmp_cells->speeds[kk][(rank_info.row_start-1)*params.nx] , 
                     params.nx , 
                     MPI_FLOAT , 
                     rank_info.down_rank , 
-                    kk , 
+                    kk+NSPEEDS , 
                     MPI_COMM_WORLD , MPI_STATUS_IGNORE);
     }
 
@@ -412,12 +410,12 @@ int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cell
                     params.nx , 
                     MPI_FLOAT , 
                     rank_info.down_rank , 
-                    kk , 
+                    kk+NSPEEDS , 
                     &tmp_cells->speeds[kk][(rank_info.row_end)*params.nx] , 
                     params.nx , 
                     MPI_FLOAT , 
                     rank_info.up_rank , 
-                    kk , 
+                    kk+NSPEEDS , 
                     MPI_COMM_WORLD , MPI_STATUS_IGNORE);
     }
   // }
@@ -450,7 +448,7 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
 
   // #pragma vector aligned
   // #pragma omp simd
-  #pragma simd
+  // #pragma simd
   for (int ii = 0; ii < params.nx; ii++)
   {
 
@@ -504,7 +502,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
   // const decimal val2 = 2.f * c_sq;
 
 
-  int    tot_cells = 1;  /* no. of cells used in calculation */
+  int    tot_cells = 0;  /* no. of cells used in calculation */
   decimal tot_u;          /* accumulated magnitudes of velocity for each cell */
 
   /* initialise */
@@ -514,7 +512,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
   /* Fused Loop */
   for (int jj = rank_info.row_start; jj < rank_info.row_end; jj++)
   {
-    #pragma simd
+    // #pragma simd
     for (int ii = 0; ii < params.nx; ii++)     
     {
 
@@ -589,7 +587,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
       // printf("\nTMP SPEEDS: %d %lf %lf %lf\n", rank_info.rank, tmp_speeds[4], tmp_speeds[7], tmp_speeds[8]);
 
 
-      printf("\nTMP SPEEDS: %d %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", rank_info.rank, tmp_speeds[0], tmp_speeds[1], tmp_speeds[2], tmp_speeds[3], tmp_speeds[4], tmp_speeds[5], tmp_speeds[6], tmp_speeds[7], tmp_speeds[8]);
+      // printf("\nTMP SPEEDS: %d %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", rank_info.rank, tmp_speeds[0], tmp_speeds[1], tmp_speeds[2], tmp_speeds[3], tmp_speeds[4], tmp_speeds[5], tmp_speeds[6], tmp_speeds[7], tmp_speeds[8]);
 
 
         /* compute x velocity component */
@@ -611,7 +609,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
 
         /* velocity squared */
         decimal u_sq = u_x * u_x + u_y * u_y;
-        printf("\nUsquared: %d %lf %lf %lf\n", rank_info.rank, u_sq, u_x, u_y);
+        // printf("\nUsquared: %d %lf %lf %lf\n", rank_info.rank, u_sq, u_x, u_y);
 
         /* directional velocity components */
         decimal u[NSPEEDS];
@@ -746,7 +744,7 @@ decimal av_velocity(const t_param params, s_speed* cells, int* obstacles)
     }
   }
 
-  return tot_u / (decimal)tot_cells;
+  return tot_u / tot_cells;
 }
 
 
