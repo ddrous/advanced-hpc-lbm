@@ -113,7 +113,7 @@ int initialise(const char* paramfile, const char* obstaclefile,
 ** timestep calls, in order, the functions:
 ** accelerate_flow(), propagate(), rebound() & collision()
 */
-decimal timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles, m_info rank_info);
+decimal timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles, m_info rank_info, int tot_cells);
 
 int compute_rank_info(int rank, int size, m_info* rank_info, t_param params);
 
@@ -123,10 +123,10 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
 // int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
 // int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
 // int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info);      // Fusion step !!
+decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info, int tot_cells);      // Fusion step !!
 
 int collate_data(const t_param params, const s_speed* cells, m_info rank_info);
-int collate_vels(const t_param params, decimal* av_vels, m_info rank_info, int nb_unoc_cells);
+int collate_vels(const t_param params, decimal** av_vels, m_info rank_info);
 
 int write_values(const t_param params, s_speed* cells, int* obstacles, decimal* av_vels);
 
@@ -208,9 +208,12 @@ int main(int argc, char* argv[])
   // printf("Rank %d TotalRank %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
 
 
+  int tot_cells = nb_unoccupied_cells(params, &cells, obstacles);
+
+
   for (int tt = 0; tt < params.maxIters; tt++)
   {
-    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles, rank_info);    // HERE !!!
+    av_vels[tt] = timestep(params, &cells, &tmp_cells, obstacles, rank_info, tot_cells);    // HERE !!!
 
     // #ifdef DEBUG
     //     printf("== LOCAL DATA \n Timestep : %d==\n", tt);
@@ -229,8 +232,7 @@ int main(int argc, char* argv[])
   // Collate data from ranks here 
   collate_data(params, &cells, rank_info);
 
-  int tot_cells = nb_unoccupied_cells(params, &cells, obstacles);
-  collate_vels(params, av_vels, rank_info, tot_cells);
+  collate_vels(params, &av_vels, rank_info);
 
   if (rank==0){
     for (int tt = 0; tt < params.maxIters; tt++)
@@ -272,17 +274,15 @@ int main(int argc, char* argv[])
 
 
 
-decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info rank_info)
+decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info rank_info, int tot_cells)
 {
 
   exchange_halos(params, cells, tmp_cells, rank_info);
 
-  // if (rank_info.rank == rank_info.size-1)      // TODO identify who should handle row = ny-1 
+  if (rank_info.row_start <= params.ny-1 && params.ny-1 < rank_info.row_end)
     accelerate_flow(params, cells, obstacles);
 
-  decimal av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, rank_info);
-
-  // printf("This is what we have: %lf \n", av_vel);
+  decimal av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, rank_info, tot_cells);
 
   // Swapp pointers
   s_speed tmp = *cells;
@@ -335,39 +335,58 @@ int collate_data(const t_param params, const s_speed* cells, m_info rank_info){
 
 
 
-int collate_vels(const t_param params, decimal* av_vels, m_info rank_info, int nb_unoc_cells){
+int collate_vels(const t_param params, decimal** av_vels, m_info rank_info){
 
-  if (rank_info.rank != 0){
-    MPI_Send( av_vels , 
-              params.maxIters, 
-              MPI_FLOAT , 
-              0 , 
-              123 , 
-              MPI_COMM_WORLD);
-  }
+  // if (rank_info.rank != 0){
+  //   MPI_Send( av_vels , 
+  //             params.maxIters, 
+  //             MPI_FLOAT , 
+  //             0 , 
+  //             123 , 
+  //             MPI_COMM_WORLD);
+  // }
 
-  else{
+  // else{
 
-    decimal* new_av_vels = (decimal*)malloc(sizeof(decimal) * params.maxIters);   // TODO Carefull of deadlock here
+  //   decimal* new_av_vels = (decimal*)malloc(sizeof(decimal) * params.maxIters);
     
-    for (int src = 1; src < rank_info.size; src++){
-        MPI_Recv( new_av_vels , 
-                  params.maxIters , 
-                  MPI_FLOAT , 
-                  src , 
-                  123 , 
-                  MPI_COMM_WORLD , MPI_STATUS_IGNORE);
+  //   for (int src = 1; src < rank_info.size; src++){
+  //       MPI_Recv( new_av_vels , 
+  //                 params.maxIters , 
+  //                 MPI_FLOAT , 
+  //                 src , 
+  //                 123 , 
+  //                 MPI_COMM_WORLD , MPI_STATUS_IGNORE);
 
-        for (int tt = 0; tt < params.maxIters; tt++)
-          av_vels[tt] += new_av_vels[tt];
+  //       for (int tt = 0; tt < params.maxIters; tt++)
+  //         av_vels[tt] += new_av_vels[tt];
+  //   }
+  //   free(new_av_vels);
+  //   new_av_vels = NULL;
+
+  //   for (int tt = 0; tt < params.maxIters; tt++)
+  //     av_vels[tt] /= nb_unoc_cells;
+
+  // }
+
+
+
+
+    decimal* av_vels_global = NULL;
+    if (rank_info.rank == 0)
+      av_vels_global = (decimal*)malloc(sizeof(decimal) * params.maxIters);
+
+    MPI_Reduce( *av_vels, av_vels_global, params.maxIters, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD );
+    
+    if (rank_info.rank == 0){
+      // Swap av_vels with av_vels_global
+      decimal* tmp = *av_vels;
+      *av_vels = av_vels_global;
+      av_vels_global = tmp;
+
+      free(av_vels_global);
+      av_vels_global = NULL;
     }
-    free(new_av_vels);
-    new_av_vels = NULL;
-
-    for (int tt = 0; tt < params.maxIters; tt++)
-      av_vels[tt] /= nb_unoc_cells;
-
-  }
 
   return 0;
 
@@ -522,7 +541,7 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
 
 
 
-decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info rank_info)
+decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info rank_info, int tot_cells)
 {
 
   #ifdef ICC
@@ -707,9 +726,7 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
     }
   }
 
-  // return tot_u / (decimal)tot_cells;
-  return tot_u;    // NOTE: carefull here: this is MPI local and unweighted
-
+  return tot_u / (decimal)tot_cells;
 
 }
 
