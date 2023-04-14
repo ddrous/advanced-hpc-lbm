@@ -199,7 +199,7 @@ int main(int argc, char* argv[])
 
   compute_rank_info(rank, size, &rank_info, params);
 
-  printf("Rank %d TotalRanks %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
+  printf("=== Rank Info === \nRank %d TotalRanks %d Remainder %d RowWork %d RowStart %d RowEnd %d CellStart %d  CellEnd %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
 
   /* Init time stops here, compute time starts*/
   gettimeofday(&timstr, NULL);
@@ -418,6 +418,9 @@ int compute_rank_info(int rank, int size, m_info* rank_info, t_param params){
       rank_info->row_end = rank_info->row_start + rank_info->row_work;
     }
   }
+
+  // Update from the base row work to the real one
+  rank_info->row_work = rank_info->row_end - rank_info->row_start;
 
   rank_info->down_rank = (rank == 0) ? MPI_PROC_NULL: rank - 1;
   rank_info->up_rank = (rank == size-1) ? MPI_PROC_NULL: rank + 1;
