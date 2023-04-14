@@ -63,7 +63,7 @@
 #define FINALSTATEFILE  "final_state.dat"
 #define AVVELSFILE      "av_vels.dat"
 
-// #define ICC
+#define ICC
 // #define DEBUG
 
 
@@ -120,10 +120,8 @@ int compute_rank_info(int rank, int size, m_info* rank_info, t_param params);
 int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cells, m_info rank_info);
 
 int accelerate_flow(const t_param params, const s_speed* restrict cells, const int* obstacles);
-// int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
-// int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-// int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info, int tot_cells);      // Fusion step !!
+decimal pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info, int tot_cells);
+
 
 int collate_data(const t_param params, const s_speed* cells, m_info rank_info);
 int collate_vels(const t_param params, decimal** av_vels, m_info rank_info);
@@ -201,7 +199,7 @@ int main(int argc, char* argv[])
 
   compute_rank_info(rank, size, &rank_info, params);
 
-  // printf("Rank %d TotalRank %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
+  printf("Rank %d TotalRanks %d Remainder %d RowWork %d RowStart %d RowEnd %d Start %d  End %d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
 
   /* Init time stops here, compute time starts*/
   gettimeofday(&timstr, NULL);
@@ -230,11 +228,13 @@ int main(int argc, char* argv[])
   col_tic=comp_toc;
 
 
-  // Collate data from ranks here 
-  collate_data(params, &cells, rank_info);
+  if (rank_info.size != 1){
+    // Collate data from ranks here 
+    collate_data(params, &cells, rank_info);
 
-  // Collate average velocities from ranks here 
-  collate_vels(params, &av_vels, rank_info);
+    // Collate average velocities from ranks here 
+    collate_vels(params, &av_vels, rank_info);
+  }
 
   if (rank==0){
     for (int tt = 0; tt < params.maxIters; tt++)
@@ -279,7 +279,9 @@ int main(int argc, char* argv[])
 decimal timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info rank_info, int tot_cells)
 {
 
-  exchange_halos(params, cells, tmp_cells, rank_info);
+  if (rank_info.size != 1){
+    exchange_halos(params, cells, tmp_cells, rank_info);
+  }
 
   if (rank_info.row_start <= params.ny-1 && params.ny-1 < rank_info.row_end)
     accelerate_flow(params, cells, obstacles);
@@ -375,7 +377,7 @@ int collate_vels(const t_param params, decimal** av_vels, m_info rank_info){
       av_vels_global = (decimal*)malloc(sizeof(decimal) * params.maxIters);
 
     MPI_Reduce( *av_vels, av_vels_global, params.maxIters, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD );
-    
+
     if (rank_info.rank == 0){
       // Swap av_vels with av_vels_global
       decimal* tmp = *av_vels;
@@ -385,6 +387,7 @@ int collate_vels(const t_param params, decimal** av_vels, m_info rank_info){
       free(av_vels_global);
       av_vels_global = NULL;
     }
+
 
   return 0;
 
@@ -569,11 +572,13 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
 
   /* Fused Loop */
   #pragma vector aligned
-  // #pragma omp simd
+  // #pragma simd
   #pragma omp parallel for collapse(1) reduction(+:tot_u)
   for (int jj = rank_info.row_start; jj < rank_info.row_end; jj++)
   {
     decimal tot_u_tmp = 0.f;
+    // printf("Here is my thread id: %d out of %d", omp_get_thread_num(), omp_get_num_threads());
+
     #pragma omp simd reduction(+:tot_u_tmp)
     for (int ii = 0; ii < params.nx; ii++)
     {
@@ -710,12 +715,15 @@ int nb_unoccupied_cells(const t_param params, s_speed* cells, int* obstacles)
 
   /* loop over all non-blocked cells */     // TODO vectorise this !
 
-  #pragma omp parallel for simd reduction(+:tot_cells)
-  for (int id = 0; id < params.nx*params.ny; id++)
+  #pragma omp parallel for reduction(+:tot_cells)
+  for (int jj = 0; jj < params.ny; jj++)
   {
-      /* ignore occupied cells */
-      if (!obstacles[id])
+    #pragma omp simd
+    for (int ii = 0; ii < params.nx; ii++)
+    {
+        if (!obstacles[ii + jj*params.nx])
         ++tot_cells;
+    }
   }
 
   return tot_cells;
@@ -887,7 +895,7 @@ int initialise(const char* paramfile, const char* obstaclefile,
   decimal w1 = params->density      / 9.f;
   decimal w2 = params->density      / 36.f;
 
-  #pragma omp parallel for collapse(1)
+  #pragma omp parallel for
   for (int jj = 0; jj < params->ny; jj++)
   {
     #pragma omp simd
@@ -909,8 +917,10 @@ int initialise(const char* paramfile, const char* obstaclefile,
   }
 
   /* first set all cells in obstacle array to zero */
+  #pragma omp parallel for
   for (int jj = 0; jj < params->ny; jj++)
   {
+    #pragma omp simd
     for (int ii = 0; ii < params->nx; ii++)
     {
       (*obstacles_ptr)[ii + jj*params->nx] = 0;
