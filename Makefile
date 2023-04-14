@@ -9,7 +9,7 @@ CC=icc
 # CFLAGS= -std=c99 -Wall -Ofast -ftree-vectorize -fopt-info-vec-optimized
 # CFLAGS= -std=c99 -Wall -Ofast -march=haswell -fopt-info-vec-missed -funsafe-math-optimizations
 
-CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native
+CFLAGS= -std=c99 -Wall -Ofast -qopt-report=5 -mtune=native -fopenmp
 
 
 FINAL_STATE_FILE=./final_state.dat

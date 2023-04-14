@@ -62,7 +62,7 @@
 #define FINALSTATEFILE  "final_state.dat"
 #define AVVELSFILE      "av_vels.dat"
 
-#define ALIGN 16
+
 
 typedef float decimal;        // To switch between double and decimals
 
@@ -246,9 +246,9 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
 
   for (int kk = 0; kk < NSPEEDS; kk++)
   {
-    __assume_aligned(cells->speeds[kk], ALIGN);
+    __assume_aligned(cells->speeds[kk], 64);
   }
-  __assume_aligned(obstacles, ALIGN);
+  __assume_aligned(obstacles, 64);
 __assume((params.nx)%2==0);
   // ACCELERATE FLOW
   /* modify the 2nd row of the grid */
@@ -304,11 +304,11 @@ decimal pro_re_col_av(const t_param params, const s_speed* restrict cells, s_spe
 
   for (int kk = 0; kk < NSPEEDS; kk++)
   {
-  __assume_aligned(cells->speeds[kk], ALIGN);
-  __assume_aligned(tmp_cells->speeds[kk], ALIGN);
+  __assume_aligned(cells->speeds[kk], 64);
+  __assume_aligned(tmp_cells->speeds[kk], 64);
   }
 
-  __assume_aligned(obstacles, ALIGN);
+  __assume_aligned(obstacles, 64);
 __assume((params.nx)%2==0);
 
   // /* compute weighting factors */
@@ -644,7 +644,7 @@ int initialise(const char* paramfile, const char* obstaclefile,
   // cells_ptr->speeds = (decimal**)_mm_malloc(sizeof(decimal*) * NSPEEDS, 64);
   for (int i = 0; i < NSPEEDS; i++)
   {
-    cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), ALIGN);
+    cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), 64);
   }
   if (cells_ptr->speeds == NULL) die("cannot allocate memory for cells", __LINE__, __FILE__);
 
@@ -652,12 +652,12 @@ int initialise(const char* paramfile, const char* obstaclefile,
   // tmp_cells_ptr->speeds = (decimal**)_mm_malloc(sizeof(decimal*) * NSPEEDS, 64);
   for (int i = 0; i < NSPEEDS; i++)
   {
-    tmp_cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), ALIGN);
+    tmp_cells_ptr->speeds[i] = (decimal*)_mm_malloc(sizeof(decimal) * (params->ny * params->nx), 64);
   }
   if (tmp_cells_ptr->speeds == NULL) die("cannot allocate memory for cells", __LINE__, __FILE__);
 
   /* the map of obstacles */
-  *obstacles_ptr = (int *)_mm_malloc(sizeof(int) * (params->ny * params->nx), ALIGN);
+  *obstacles_ptr = (int *)_mm_malloc(sizeof(int) * (params->ny * params->nx), 64);
   if (*obstacles_ptr == NULL) die("cannot allocate column memory for obstacles", __LINE__, __FILE__);
 
   /* initialise densities */
