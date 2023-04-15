@@ -5,29 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "LINUX - debug project",
             "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/d2q9-bgk.out",
-            "args": ["input_128x128.params" "obstacles_128x128.dat"],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
+            "program": "${workspaceFolder}/d2q9-bgk",
+            "request": "attach",
+            "processId": "${command:pickProcess}",
+            // "request": "launch",
+            // "args": ["input_128x128.params", "obstacles_128x128.dat"],
+            // "stopAtEntry": false,
+            // "cwd": "${workspaceFolder}",
+            // "environment": [],
+            // "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "LINUX - build project"
         }
-
     ]
 }

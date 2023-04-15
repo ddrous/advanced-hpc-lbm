@@ -8,9 +8,13 @@
 module load iimpi/2017.01-GCC-5.4.0-2.26
 
 
-#### ---------- FOR HYBRID OPEMMP+MPI ----------###
-#### On BC 4, optimal usage might be 8 ranks with 14 threads per ranks (cuz of NUMA)
 
+#### ---------- FOR FLAT MPI ----------###
+export OMP_NUM_THREADS=1
+
+
+#### ---------- FOR HYBRID OPEMMP+MPI ----------###
+## export I_MPI_PIN_DOMAIN=omp
 # export I_MPI_PIN_DOMAIN=socket
 
 # export OMP_PLACES=cores

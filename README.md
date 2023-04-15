@@ -149,5 +149,6 @@ You can view the final state of the simulation by creating a .png image file usi
     - for memory: `sstat 11346591 --fields=MaxRSS%5`
 
 # Hybrid OpenMP+MPI
+On BC 4, optimal usage might be 8 ranks with 14 threads per ranks (because of NUMA)
     - https://vlaams-supercomputing-centrum-vscdocumentation.readthedocs-hosted.com/en/latest/software/hybrid_mpi_openmp_programs.html
 

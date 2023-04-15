@@ -2,11 +2,11 @@
 
 EXE=d2q9-bgk
 
-CC=mpiicc
-CFLAGS= -std=c99 -Wall -Ofast -qopt-report=1 -mtune=native -qopenmp
-
 # CC=mpiicc
-# CFLAGS= -std=c99 -Wall -Ofast -qopt-report=1 -mtune=native -fopenmp
+# CFLAGS= -std=c99 -Wall -Ofast -qopt-report=1 -mtune=native -qopenmp
+
+CC=mpicc
+CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fopenmp -g
 
 # CC=mpicc
 # CFLAGS= -std=c99 -Wall -Ofast -mtune=native -fopenmp -fno-tree-vectorize
