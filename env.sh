@@ -14,8 +14,8 @@ export OMP_NUM_THREADS=1
 
 
 #### ---------- FOR HYBRID OPEMMP+MPI ----------###
-## export I_MPI_PIN_DOMAIN=omp
-# export I_MPI_PIN_DOMAIN=socket
+# export I_MPI_PIN_DOMAIN=omp
+# # export I_MPI_PIN_DOMAIN=socket
 
 # export OMP_PLACES=cores
 # export OMP_PROC_BIND=true

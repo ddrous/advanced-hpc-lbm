@@ -64,7 +64,7 @@
 #define FINALSTATEFILE  "final_state.dat"
 #define AVVELSFILE      "av_vels.dat"
 
-// #define ICC        /* If using icc compiler, account for _mm_malloc, etc. */
+#define ICC        /* If using icc compiler, accounts for _mm_malloc, etc. */
 // #define DEBUG      /* For debugging */
 
 
@@ -188,8 +188,8 @@ int main(int argc, char* argv[])
   /* Allocate space for space local to each MPI rank */
   initialise(paramfile, obstaclefile, &params, &cells, &tmp_cells, &obstacles, &av_vels, &rank_info);
 
-  /* Print information about the amount of work each rank does (horizontal split) */
-  printf("=== Rank Info === \nRank %-6d TotalRanks %-6d Remainder %-6d RowWork %-6d RowStart %-6d RowEnd %-6d CellStart %-6d CellEnd %-6d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
+  /* Print information about the work each rank does (horizontal split) */
+  printf("=== Rank Info === \nRank %-6d TotalRanks %-6d Remainder %-6d RowWork %-6d RowStart %-6d RowEnd %-6d CellStart %-6d   CellEnd %-6d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
 
 
   /* Init time stops here, compute time starts*/
@@ -244,7 +244,7 @@ int main(int argc, char* argv[])
 
   if (rank_info.rank==0){
     /* write final values and free memory */
-    printf("==done==\n");
+    printf("\n==done==\n");
     // printf("Reynolds number:\t\t%.12E\n", calc_reynolds(params, cells, obstacles));
     printf("Elapsed Init time:\t\t\t%.6lf (s)\n",    init_toc - init_tic);
     printf("Elapsed Compute time:\t\t\t%.6lf (s)\n", comp_toc - comp_tic);
@@ -526,7 +526,7 @@ float pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed
         d_equ[0] = w0_ * local_density
                    * (1.f - u_sq / (2.f * c_sq));
 
-        #pragma omp simd
+        // #pragma omp simd
         for (int kk = 1; kk < 5; kk++)
         {
           d_equ[kk] = w1_ * local_density * (1.f + u[kk] / c_sq
@@ -537,7 +537,7 @@ float pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed
                                           - u_sq / val2);
         }
 
-        #pragma omp simd
+        // #pragma omp simd
         for (int kk = 0; kk < NSPEEDS; kk++)
         {
           tmp_cells->speeds[kk][id] = tmp_speeds[kk]
@@ -567,10 +567,10 @@ float pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed
 int initialise_global_obstacles(const char* obstaclefile, t_param* params, int** obstacles_ptr){
 
   #ifdef ICC
-    // _mm_free(*obstacles_ptr);
-    // *obstacles_ptr = (int *)_mm_malloc(sizeof(int) * (params->ny * params->nx), 64);
-    int * tmp_ptr = (int *)_mm_realloc(sizeof(int) * (params->ny * params->nx), 64);
-    *obstacles_ptr = tmp_ptr;
+    _mm_free(*obstacles_ptr);
+    *obstacles_ptr = (int *)_mm_malloc(sizeof(int) * (params->ny * params->nx), 64);
+    // int * tmp_ptr = (int *)_mm_realloc(sizeof(int) * (params->ny * params->nx), 64);
+    // *obstacles_ptr = tmp_ptr;
   #else
     int * tmp_ptr = (int *)realloc(*obstacles_ptr, sizeof(int) * (params->ny * params->nx));
     *obstacles_ptr = tmp_ptr;
