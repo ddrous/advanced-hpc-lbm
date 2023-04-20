@@ -335,22 +335,22 @@ int nb_unoccupied_cells(const t_param params, s_speed* cells, int* obstacles, m_
 float timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info rank_info, int tot_cells)
 {
 
-  struct timeval timstr;
-  double s_tic, s_toc, p_tic, p_toc;
+  // struct timeval timstr;
+  // double s_tic, s_toc, p_tic, p_toc;
 
-  gettimeofday(&timstr, NULL);
-  s_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+  // gettimeofday(&timstr, NULL);
+  // s_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
 
   if (rank_info.row_start <= params.ny-2 && params.ny-2 < rank_info.row_end)
     accelerate_flow(params, cells, obstacles, rank_info);
 
-  gettimeofday(&timstr, NULL);
-  s_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+  // gettimeofday(&timstr, NULL);
+  // s_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
 
   exchange_halos(params, cells, tmp_cells, rank_info);
 
-  gettimeofday(&timstr, NULL);
-  p_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+  // gettimeofday(&timstr, NULL);
+  // p_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
 
   float av_vel = pro_reb_col_avg(params, cells, tmp_cells, obstacles, rank_info, tot_cells);
 
@@ -359,13 +359,12 @@ float timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* ob
   *cells = *tmp_cells;
   *tmp_cells = tmp;
 
-  gettimeofday(&timstr, NULL);
-  p_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+  // gettimeofday(&timstr, NULL);
+  // p_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
 
-
-  printf("\n==Amdhal's times==\n");
-  printf("Elapsed Serial time:\t\t\t%.6lf (s)\n",    s_toc - s_tic);
-  printf("Elapsed Parallel time:\t\t\t%.6lf (s)\n", p_toc - p_tic);
+  // printf("\n==Amdhal's times==\n");
+  // printf("Elapsed Serial time:\t\t\t%.6lf (s)\n",    s_toc - s_tic);
+  // printf("Elapsed Parallel time:\t\t\t%.6lf (s)\n", p_toc - p_tic);
 
   return av_vel;
 
