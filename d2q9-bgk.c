@@ -115,7 +115,7 @@ int compute_rank_info(int rank, int size, m_info* rank_info, t_param params);
 float timestep(const t_param params, s_speed* restrict cells, s_speed* restrict tmp_cells, int* obstacles, m_info rank_info, int tot_cells);
 int accelerate_flow(const t_param params, const s_speed* restrict cells, const int* obstacles, m_info rank_info);
 int exchange_halos(const t_param params, const s_speed* cells, s_speed* tmp_cells, m_info rank_info);
-float pro_re_col_av(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info, int tot_cells);
+float pro_reb_col_avg(const t_param params, const s_speed* cells, s_speed* tmp_cells, const int* obstacles, m_info rank_info, int tot_cells);
 
 
 int collate_data(const t_param params, s_speed* cells, m_info rank_info);
@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
   initialise(paramfile, obstaclefile, &params, &cells, &tmp_cells, &obstacles, &av_vels, &rank_info);
 
   /* Print information about the work each rank does (horizontal split) */
-  printf("=== Rank Info === \nRank %-6d TotalRanks %-6d Remainder %-6d RowWork %-6d RowStart %-6d RowEnd %-6d CellStart %-6d   CellEnd %-6d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
+  // printf("=== Rank Info === \nRank %-6d TotalRanks %-6d Remainder %-6d RowWork %-6d RowStart %-6d RowEnd %-6d CellStart %-6d   CellEnd %-6d \n", rank_info.rank, rank_info.size, rank_info.remainder, rank_info.row_work, rank_info.row_start, rank_info.row_end, rank_info.start, rank_info.end);
 
 
   /* Init time stops here, compute time starts*/
@@ -335,17 +335,37 @@ int nb_unoccupied_cells(const t_param params, s_speed* cells, int* obstacles, m_
 float timestep(const t_param params, s_speed* cells, s_speed* tmp_cells, int* obstacles, m_info rank_info, int tot_cells)
 {
 
+  struct timeval timstr;
+  double s_tic, s_toc, p_tic, p_toc;
+
+  gettimeofday(&timstr, NULL);
+  s_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+
   if (rank_info.row_start <= params.ny-2 && params.ny-2 < rank_info.row_end)
     accelerate_flow(params, cells, obstacles, rank_info);
 
+  gettimeofday(&timstr, NULL);
+  s_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+
   exchange_halos(params, cells, tmp_cells, rank_info);
 
-  float av_vel = pro_re_col_av(params, cells, tmp_cells, obstacles, rank_info, tot_cells);
+  gettimeofday(&timstr, NULL);
+  p_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+
+  float av_vel = pro_reb_col_avg(params, cells, tmp_cells, obstacles, rank_info, tot_cells);
 
   // Swapp pointers
   s_speed tmp = *cells;
   *cells = *tmp_cells;
   *tmp_cells = tmp;
+
+  gettimeofday(&timstr, NULL);
+  p_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+
+
+  printf("\n==Amdhal's times==\n");
+  printf("Elapsed Serial time:\t\t\t%.6lf (s)\n",    s_toc - s_tic);
+  printf("Elapsed Parallel time:\t\t\t%.6lf (s)\n", p_toc - p_tic);
 
   return av_vel;
 
@@ -404,7 +424,7 @@ int accelerate_flow(const t_param params, const s_speed* restrict cells, const i
 /**
  * @brief Fused loop combination of propagate flow, rebound, and collide; a "partial" average velocity is returned 
  */
-float pro_re_col_av(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info rank_info, int tot_cells)
+float pro_reb_col_avg(const t_param params, const s_speed* restrict cells, s_speed* restrict tmp_cells, const int* obstacles, m_info rank_info, int tot_cells)
 {
 
   #ifdef ICC

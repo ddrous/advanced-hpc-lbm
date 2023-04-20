@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#SBATCH --job-name d2q9-bgk
+#SBATCH --nodes 4
+#SBATCH --ntasks-per-node 28
+#SBATCH --time 3:00:00
+#SBATCH --partition=teach_cpu
+#SBATCH --account=COSC028844
+#SBATCH --exclusive
