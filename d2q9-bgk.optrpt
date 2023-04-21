@@ -55,7 +55,7 @@ LOOP BEGIN at d2q9-bgk.c(317,3) inlined into d2q9-bgk.c(203,22)
 LOOP END
 
 LOOP BEGIN at d2q9-bgk.c(397,3) inlined into d2q9-bgk.c(209,19)
-   remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   remark #15301: peel loop WAS VECTORIZED
 LOOP END
 
 LOOP BEGIN at d2q9-bgk.c(397,3) inlined into d2q9-bgk.c(209,19)
@@ -132,7 +132,7 @@ LOOP BEGIN at d2q9-bgk.c(563,53)
    LOOP BEGIN at d2q9-bgk.c(458,5)
       remark #25258: Invariant Condition eliminated(Loop at level 2 peeled) at line 472 
       remark #25260: Invariant Condition eliminated(Proven False) at line 472
-      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+      remark #15301: peel loop WAS VECTORIZED
 
       LOOP BEGIN at d2q9-bgk.c(549,9)
          remark #25436: completely unrolled by 4   (pre-vector) 
@@ -470,7 +470,7 @@ d2q9-bgk.c(397:3-397:3):OMP:accelerate_flow:  OpenMP DEFINED LOOP WAS PARALLELIZ
 
 
 LOOP BEGIN at d2q9-bgk.c(397,3)
-   remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   remark #15301: peel loop WAS VECTORIZED
 LOOP END
 
 LOOP BEGIN at d2q9-bgk.c(397,3)
@@ -773,7 +773,7 @@ LOOP BEGIN at d2q9-bgk.c(1087,7)
       remark #25460: No loop optimizations reported
 
       LOOP BEGIN at d2q9-bgk.c(1085,5)
-         remark #15301: PERMUTED LOOP WAS VECTORIZED
+         remark #15301: PARTIAL LOOP WAS VECTORIZED
       LOOP END
 
       LOOP BEGIN at d2q9-bgk.c(1085,5)
@@ -949,7 +949,7 @@ LOOP BEGIN at d2q9-bgk.c(957,3)
    LOOP END
 
    LOOP BEGIN at d2q9-bgk.c(960,5)
-      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+      remark #15301: peel loop WAS VECTORIZED
    LOOP END
 
    LOOP BEGIN at d2q9-bgk.c(960,5)
@@ -965,7 +965,7 @@ LOOP BEGIN at d2q9-bgk.c(982,3)
    remark #25460: No loop optimizations reported
 
    LOOP BEGIN at d2q9-bgk.c(985,5)
-      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+      remark #15301: peel loop WAS VECTORIZED
    LOOP END
 
    LOOP BEGIN at d2q9-bgk.c(985,5)
@@ -1034,7 +1034,7 @@ LOOP BEGIN at d2q9-bgk.c(601,3)
    remark #25460: No loop optimizations reported
 
    LOOP BEGIN at d2q9-bgk.c(604,5)
-      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+      remark #15301: peel loop WAS VECTORIZED
    LOOP END
 
    LOOP BEGIN at d2q9-bgk.c(604,5)

@@ -20,4 +20,4 @@ echo `echo $SLURM_JOB_NODELIST | uniq`
 # mpirun -n 1  --bind-to socket ./d2q9-bgk input_128x128.params obstacles_128x128.dat
 # mpirun -n 1 ./d2q9-bgk input_128x128.params obstacles_128x128.dat
 # mpirun -n 1 ./d2q9-bgk input_256x256.params obstacles_256x256.dat
-mpirun -n 1 ./d2q9-bgk input_1024x1024.params obstacles_1024x1024.dat
+mpirun -n 112 ./d2q9-bgk input_1024x1024.params obstacles_1024x1024.dat
