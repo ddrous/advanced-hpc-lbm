@@ -1,13 +1,14 @@
 #!/bin/bash
 
-#SBATCH --job-name d2q9-bgk
-#SBATCH --nodes 4
-#SBATCH --ntasks-per-node 28
-#SBATCH --time 3:00:00
+#SBATCH --job-name=d2q9-bgk
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=28
+#SBATCH --cpus-per-task=1
+#SBATCH --time=00:10:00
 #SBATCH --partition=teach_cpu
-#SBATCH --account=COSC028844
-#SBATCH --output d2q9-bgk.out
-#SBATCH --exclusive
+#SBATCH --account=COMS031424
+#SBATCH --output=d2q9-bgk.out
+#SBATCH --exclusive 
 
 echo Running on host `hostname`
 echo Time is `date`
@@ -17,7 +18,14 @@ echo This job runs on the following machines:
 echo `echo $SLURM_JOB_NODELIST | uniq`
 
 #! Run the executable
-# mpirun -n 1  --bind-to socket ./d2q9-bgk input_128x128.params obstacles_128x128.dat
 # mpirun -n 1 ./d2q9-bgk input_128x128.params obstacles_128x128.dat
-# mpirun -n 1 ./d2q9-bgk input_256x256.params obstacles_256x256.dat
-mpirun -n 112 ./d2q9-bgk input_1024x1024.params obstacles_1024x1024.dat
+mpirun -n 8 ./d2q9-bgk input_128x128.params obstacles_128x128.dat
+# mpirun -n 8 ./d2q9-bgk input_256x256.params obstacles_256x256.dat
+# mpirun -n 8 ./d2q9-bgk input_1024x1024.params obstacles_1024x1024.dat
+
+
+# mpirun -gtool "advixe-cl -collect survey -no-auto-finalize -project-dir ./results:1" -n 12 ./d2q9-bgk input_128x128.params obstacles_128x128.dat
+# mpirun -gtool "advisor --collect=tripcounts --flop --project-dir=./results:1-28" -n 28 ./d2q9-bgk input_128x128.params obstacles_128x128.dat
+
+# mpirun -gtool "advisor --collect=tripcounts --flop --project-dir=./results:1" -n 2 ./d2q9-bgk input_128x128.params obstacles_128x128.dat
+# mpirun -gtool "advixe-cl -collect tripcounts -flop -project-dir ./results:1" -n 12 ./d2q9-bgk input_128x128.params obstacles_128x128.dat
