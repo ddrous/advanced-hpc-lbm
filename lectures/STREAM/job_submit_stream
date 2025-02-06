@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#SBATCH --job-name=d2q9-bgk
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=28
+#SBATCH --time=00:10:00
+#SBATCH --partition=teach_cpu
+#SBATCH --account=COMS031424
+#SBATCH --output=stream.out
+#SBATCH --exclusive 
+
+echo Running on host `hostname`
+echo Time is `date`
+echo Directory is `pwd`
+echo Slurm job ID is $SLURM_JOB_ID
+echo This job runs on the following machines:
+echo `echo $SLURM_JOB_NODELIST | uniq`
+
+# Optimize OpenMP performance behavious
+# export OMP_SCHEDULE=static  # Disable dynamic loop scheduling
+# export OMP_NUM_THREADS=14
+# export OMP_PLACES=cores
+# export OMP_PROC_BIND=close
+
+# Running stream
+OMP_NUM_THREADS=14 OMP_PLACES=cores OMP_PROC_BIND=close numactl -N 0 -m 1 ./stream_c.exe
